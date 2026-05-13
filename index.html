@@ -11,10 +11,12 @@
 	<!-- Google Fonts -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+	      rel="stylesheet">
 
 	<!-- Highlight.js -->
-	<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+	<link id="hljs-theme" rel="stylesheet"
+	      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
 	<!-- html2canvas -->
@@ -81,14 +83,33 @@
 			color: transparent;
 		}
 
-		::-webkit-scrollbar { width: 10px; height: 10px; }
-		::-webkit-scrollbar-track { background: transparent; }
-		::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
-		::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+		::-webkit-scrollbar {
+			width: 10px;
+			height: 10px;
+		}
+
+		::-webkit-scrollbar-track {
+			background: transparent;
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 4px;
+		}
+
+		::-webkit-scrollbar-thumb:hover {
+			background: rgba(255, 255, 255, 0.4);
+		}
 
 		/* Style cho công cụ màu (Color picker) */
-		input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-		input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
+		input[type="color"]::-webkit-color-swatch-wrapper {
+			padding: 0;
+		}
+
+		input[type="color"]::-webkit-color-swatch {
+			border: none;
+			border-radius: 4px;
+		}
 	</style>
 </head>
 <body class="flex flex-col md:flex-row h-screen overflow-hidden">
@@ -109,33 +130,89 @@
 			<!-- Đổi grid-cols-5 thành grid-cols-6 để thêm nút Text -->
 			<div class="grid grid-cols-6 gap-2 mb-2">
 				<!-- Nút Gõ Code -->
-				<button class="tool-btn active flex items-center justify-center p-2 rounded-md bg-blue-600 border border-blue-500 text-white transition" data-tool="edit" title="Soạn thảo Code (Mặc định)">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>
+				<button class="tool-btn active flex items-center justify-center p-2 rounded-md bg-blue-600 border border-blue-500 text-white transition"
+				        data-tool="edit" title="Soạn thảo Code (Mặc định)">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M4 11a9 9 0 0 1 9 9"/>
+						<path d="M4 4a16 16 0 0 1 16 16"/>
+						<circle cx="5" cy="19" r="1"/>
+					</svg>
 				</button>
 				<!-- Viết chữ -->
-				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700" data-tool="text" title="Viết chữ (Text)">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="8" y1="20" x2="16" y2="20"/></svg>
+				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700"
+				        data-tool="text" title="Viết chữ (Text)">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="4 7 4 4 20 4 20 7"/>
+						<line x1="12" y1="4" x2="12" y2="20"/>
+						<line x1="8" y1="20" x2="16" y2="20"/>
+					</svg>
 				</button>
 				<!-- Hình Chữ Nhật -->
-				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700" data-tool="rect" title="Vẽ hình chữ nhật">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700"
+				        data-tool="rect" title="Vẽ hình chữ nhật">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+					</svg>
 				</button>
 				<!-- Hình Tròn -->
-				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700" data-tool="circle" title="Vẽ hình elip/tròn">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
+				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700"
+				        data-tool="circle" title="Vẽ hình elip/tròn">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="12" cy="12" r="10"/>
+					</svg>
 				</button>
 				<!-- Mũi Tên -->
-				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700" data-tool="arrow" title="Vẽ mũi tên">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="19" x2="19" y2="5"/><polyline points="10 5 19 5 19 14"/></svg>
+				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700"
+				        data-tool="arrow" title="Vẽ mũi tên">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<line x1="5" y1="19" x2="19" y2="5"/>
+						<polyline points="10 5 19 5 19 14"/>
+					</svg>
 				</button>
 				<!-- Chọn màu vẽ -->
 				<div class="rounded-md overflow-hidden border border-gray-700" title="Chọn màu vẽ">
-					<input type="color" id="draw-color" value="#ff3366" class="w-full h-full p-0 border-0 cursor-pointer bg-gray-800 block">
+					<input type="color" id="draw-color" value="#ff3366"
+					       class="w-full h-full p-0 border-0 cursor-pointer bg-gray-800 block">
 				</div>
 			</div>
-			<button id="clear-draw-btn" class="w-full py-1.5 px-3 bg-gray-800 hover:bg-red-900/50 hover:text-red-300 border border-gray-700 text-xs text-gray-400 rounded-md transition duration-200">
-				🗑 Xóa tất cả nét vẽ
-			</button>
+			<!-- Cụm nút Undo / Redo / Xóa -->
+			<div class="grid grid-cols-3 gap-2 mt-2">
+				<button id="undo-btn"
+				        class="w-full py-1.5 px-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-xs text-gray-400 rounded-md transition duration-200 flex justify-center items-center gap-1 opacity-50 cursor-not-allowed"
+				        title="Hoàn tác (Ctrl+Z)">
+					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M3 7v6h6"/>
+						<path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+					</svg>
+					Undo
+				</button>
+				<button id="redo-btn"
+				        class="w-full py-1.5 px-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-xs text-gray-400 rounded-md transition duration-200 flex justify-center items-center gap-1 opacity-50 cursor-not-allowed"
+				        title="Làm lại (Ctrl+Y / Ctrl+Shift+Z)">
+					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M21 7v6h-6"/>
+						<path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/>
+					</svg>
+					Redo
+				</button>
+				<button id="clear-draw-btn"
+				        class="w-full py-1.5 px-2 bg-gray-800 hover:bg-red-900/50 hover:text-red-300 border border-gray-700 text-xs text-gray-400 rounded-md transition duration-200 flex justify-center items-center gap-1"
+				        title="Xóa tất cả nét vẽ">
+					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="3 6 5 6 21 6"/>
+						<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+					</svg>
+					Xóa
+				</button>
+			</div>
 		</div>
 
 		<hr class="border-gray-800">
@@ -143,7 +220,8 @@
 		<!-- Chọn Ngôn Ngữ -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Ngôn ngữ</label>
-			<select id="lang-select" class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
+			<select id="lang-select"
+			        class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
 				<option value="javascript">JavaScript</option>
 				<option value="html">HTML</option>
 				<option value="css">CSS</option>
@@ -160,7 +238,8 @@
 		<!-- Chọn Theme -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Giao diện (Theme)</label>
-			<select id="theme-select" class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
+			<select id="theme-select"
+			        class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
 				<option value="atom-one-dark">Atom One Dark</option>
 				<option value="monokai">Monokai</option>
 				<option value="dracula">Dracula</option>
@@ -174,7 +253,8 @@
 		<!-- Chọn Hình nền -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Hình nền</label>
-			<select id="bg-select" class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
+			<select id="bg-select"
+			        class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
 				<option value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">Tím Hoàng Hôn</option>
 				<option value="linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)">Đại Dương Xanh</option>
 				<option value="linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)">Kẹo Ngọt</option>
@@ -189,14 +269,17 @@
 		<!-- Điều chỉnh Padding -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Khoảng cách (Padding)</label>
-			<input type="range" id="padding-slider" min="16" max="128" value="64" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+			<input type="range" id="padding-slider" min="16" max="128" value="64"
+			       class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
 			<div class="text-right text-xs text-gray-500 mt-1" id="padding-value">64px</div>
 		</div>
 
 		<!-- Nút Format Code -->
-		<button id="format-btn" class="w-full py-2 px-4 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 font-medium rounded-md transition duration-200 flex justify-center items-center gap-2">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+		<button id="format-btn"
+		        class="w-full py-2 px-4 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 font-medium rounded-md transition duration-200 flex justify-center items-center gap-2">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+			     stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
 			</svg>
 			Format Code
 		</button>
@@ -204,9 +287,12 @@
 		<hr class="border-gray-800">
 
 		<!-- Nút Tải Xuống -->
-		<button id="export-btn" class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-md shadow-lg transition-transform transform active:scale-95 flex justify-center items-center gap-2">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+		<button id="export-btn"
+		        class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-md shadow-lg transition-transform transform active:scale-95 flex justify-center items-center gap-2">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+			     stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+				      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
 			</svg>
 			Lưu Ảnh PNG
 		</button>
@@ -216,15 +302,22 @@
 </aside>
 
 <!-- Khu vực Xem trước (Main Canvas) -->
-<main class="flex-1 bg-black relative flex items-start justify-center overflow-auto p-4 md:p-10 custom-scrollbar" id="main-area">
+<main class="flex-1 bg-black relative flex items-start justify-center overflow-auto p-4 md:p-10 custom-scrollbar"
+      id="main-area">
 
-	<div id="export-container" class="relative transition-all duration-300 rounded-lg flex items-center justify-center shrink-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 64px;">
+	<div id="export-container"
+	     class="relative transition-all duration-300 rounded-lg flex items-center justify-center shrink-0"
+	     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 64px;">
 
 		<!-- Cửa sổ giả lập hệ điều hành Mac -->
-		<div id="mac-window" class="rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] w-[800px] min-w-[350px] border border-white/10 flex flex-col relative group" style="background-color: #282c34;">
+		<div id="mac-window"
+		     class="rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] w-[800px] min-w-[350px] border border-white/10 flex flex-col relative group"
+		     style="background-color: #282c34;">
 
 			<!-- Lớp phủ SVG để vẽ (Draw Layer) -->
-			<svg id="draw-layer" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 w-full h-full z-20 pointer-events-none rounded-xl" style="overflow: visible;"></svg>
+			<svg id="draw-layer" xmlns="http://www.w3.org/2000/svg"
+			     class="absolute inset-0 w-full h-full z-20 pointer-events-none rounded-xl"
+			     style="overflow: visible;"></svg>
 
 			<!-- Thanh kéo để thay đổi kích thước -->
 			<div class="resize-handle left absolute left-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-l-xl z-30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -239,7 +332,8 @@
 				</div>
 				<!-- Tên tệp -->
 				<div class="flex-1 flex justify-center px-20">
-					<span id="file-title" contenteditable="true" spellcheck="false" class="text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition hover:bg-white/5 rounded px-3 py-1 min-w-[50px] max-w-[250px] whitespace-nowrap overflow-hidden relative leading-normal block cursor-text">untitled.js</span>
+					<span id="file-title" contenteditable="true" spellcheck="false"
+					      class="text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition hover:bg-white/5 rounded px-3 py-1 min-w-[50px] max-w-[250px] whitespace-nowrap overflow-hidden relative leading-normal block cursor-text">untitled.js</span>
 				</div>
 			</div>
 
@@ -273,6 +367,7 @@ function createBeautifulCode() {
 </main>
 
 <script>
+    // DI CHUYỂN KHAI BÁO LÊN TRÊN ĐẦU ĐỂ TRÁNH LỖI ReferenceError
     const editor = document.getElementById('code-editor');
     const display = document.getElementById('highlight-display');
     const langSelect = document.getElementById('lang-select');
@@ -282,10 +377,112 @@ function createBeautifulCode() {
     const macWindow = document.getElementById('mac-window');
     const exportContainer = document.getElementById('export-container');
     const hljsThemeLink = document.getElementById('hljs-theme');
+    const drawLayer = document.getElementById('draw-layer');
+    const toolBtns = document.querySelectorAll('.tool-btn');
+    const colorPicker = document.getElementById('draw-color');
 
     // --- CODE EDITOR LOGIC ---
     hljs.highlightElement(display);
     syncThemeBackground();
+
+    // --- HISTORY (UNDO / REDO) LOGIC ---
+    let history = [];
+    let historyIndex = -1;
+    let isRestoring = false;
+    let saveTimeout;
+
+    function updateUndoRedoButtons() {
+        const undoBtn = document.getElementById('undo-btn');
+        const redoBtn = document.getElementById('redo-btn');
+
+        if (historyIndex > 0) {
+            undoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            undoBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        if (historyIndex < history.length - 1) {
+            redoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            redoBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }
+
+    function saveState(delay = 0) {
+        if (isRestoring) return;
+        clearTimeout(saveTimeout);
+
+        const executeSave = () => {
+            const currentState = {
+                code: editor.value,
+                svg: drawLayer.innerHTML
+            };
+
+            if (historyIndex >= 0) {
+                const lastState = history[historyIndex];
+                if (lastState.code === currentState.code && lastState.svg === currentState.svg) return;
+            }
+
+            if (historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
+            }
+
+            history.push(currentState);
+            if (history.length > 50) history.shift();
+            else historyIndex++;
+
+            updateUndoRedoButtons();
+        };
+
+        if (delay > 0) {
+            saveTimeout = setTimeout(executeSave, delay);
+        } else {
+            executeSave();
+        }
+    }
+
+    function undo() {
+        if (historyIndex > 0) {
+            historyIndex--;
+            restoreState(history[historyIndex]);
+        }
+    }
+
+    function redo() {
+        if (historyIndex < history.length - 1) {
+            historyIndex++;
+            restoreState(history[historyIndex]);
+        }
+    }
+
+    function restoreState(state) {
+        isRestoring = true;
+        editor.value = state.code;
+        drawLayer.innerHTML = state.svg;
+        updateCode();
+        updateUndoRedoButtons();
+        isRestoring = false;
+    }
+
+    document.getElementById('undo-btn').addEventListener('click', undo);
+    document.getElementById('redo-btn').addEventListener('click', redo);
+
+    document.addEventListener('keydown', (e) => {
+        // Không can thiệp nếu đang nhập text vào Title hoặc Input Vẽ
+        if (e.target.id === 'file-title' || e.target.id === 'temp-text-input') return;
+
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+            e.preventDefault();
+            if (e.shiftKey) redo();
+            else undo();
+        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+            e.preventDefault();
+            redo();
+        }
+    });
+
+    // Lưu trạng thái đầu tiên khi vừa tải trang
+    saveState();
 
     function updateCode() {
         display.textContent = editor.value || " ";
@@ -295,9 +492,19 @@ function createBeautifulCode() {
         syncThemeBackground();
     }
 
-    editor.addEventListener('input', updateCode);
-    editor.addEventListener('paste', () => setTimeout(updateCode, 10));
-    editor.addEventListener('keydown', function(e) {
+    editor.addEventListener('input', () => {
+        updateCode();
+        saveState(500); // Debounce: đợi người dùng ngừng gõ 0.5s rồi mới lưu
+    });
+
+    editor.addEventListener('paste', () => {
+        setTimeout(() => {
+            updateCode();
+            saveState(); // Lưu ngay sau khi Paste
+        }, 10)
+    });
+
+    editor.addEventListener('keydown', function (e) {
         if (e.key === 'Tab') {
             e.preventDefault();
             const start = this.selectionStart;
@@ -305,6 +512,7 @@ function createBeautifulCode() {
             this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
             this.selectionStart = this.selectionEnd = start + 4;
             updateCode();
+            saveState();
         }
     });
 
@@ -341,14 +549,15 @@ function createBeautifulCode() {
         const lang = langSelect.value;
         try {
             if (['javascript', 'json', 'typescript', 'java', 'cpp', 'php'].includes(lang)) {
-                code = js_beautify(code, { indent_size: 4, preserve_newlines: true });
+                code = js_beautify(code, {indent_size: 4, preserve_newlines: true});
             } else if (lang === 'html') {
-                code = html_beautify(code, { indent_size: 4 });
+                code = html_beautify(code, {indent_size: 4});
             } else if (lang === 'css') {
-                code = css_beautify(code, { indent_size: 4 });
+                code = css_beautify(code, {indent_size: 4});
             }
             editor.value = code;
             updateCode();
+            saveState(); // Lưu lịch sử sau khi Format
         } catch (err) {
             alert("Ngôn ngữ này chưa được hỗ trợ format tự động hoặc code đang bị lỗi cú pháp.");
         }
@@ -377,12 +586,20 @@ function createBeautifulCode() {
         macWindow.style.width = `${newWidth}px`;
     });
     document.addEventListener('mouseup', () => {
-        if (isResizing) { isResizing = false; macWindow.style.transition = ''; }
+        if (isResizing) {
+            isResizing = false;
+            macWindow.style.transition = '';
+        }
     });
 
     // --- FILE TITLE LOGIC ---
     const fileTitle = document.getElementById('file-title');
-    fileTitle.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); fileTitle.blur(); } });
+    fileTitle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            fileTitle.blur();
+        }
+    });
     fileTitle.addEventListener('paste', (e) => {
         e.preventDefault();
         const text = (e.originalEvent || e).clipboardData.getData('text/plain');
@@ -390,9 +607,6 @@ function createBeautifulCode() {
     });
 
     // --- DRAWING LAYER LOGIC ---
-    const drawLayer = document.getElementById('draw-layer');
-    const toolBtns = document.querySelectorAll('.tool-btn');
-    const colorPicker = document.getElementById('draw-color');
     let currentTool = 'edit';
     let isDrawing = false;
     let currentSvgShape = null;
@@ -445,7 +659,10 @@ function createBeautifulCode() {
 
     // Xóa hình vẽ
     document.getElementById('clear-draw-btn').addEventListener('click', () => {
-        drawLayer.innerHTML = '';
+        if (drawLayer.innerHTML !== '') {
+            drawLayer.innerHTML = '';
+            saveState();
+        }
     });
 
     // Bắt đầu vẽ
@@ -494,7 +711,7 @@ function createBeautifulCode() {
             setTimeout(() => input.focus(), 10);
 
             // Tự động kéo dài input khi gõ
-            input.addEventListener('input', function() {
+            input.addEventListener('input', function () {
                 this.style.width = ((this.value.length + 1) * 9) + 'px';
             });
 
@@ -515,6 +732,7 @@ function createBeautifulCode() {
                     textNode.setAttribute('font-weight', '500');
                     textNode.textContent = input.value;
                     drawLayer.appendChild(textNode);
+                    saveState(); // Lưu lại dòng chữ vừa viết vào lịch sử
                 }
                 input.remove(); // Xóa input tạm
             };
@@ -612,7 +830,12 @@ function createBeautifulCode() {
 
     // Kết thúc vẽ
     const stopDrawing = () => {
-        isDrawing = false;
+        if (isDrawing) {
+            isDrawing = false;
+            if (currentSvgShape) {
+                saveState(); // Lưu lại hình vẽ vừa tạo
+            }
+        }
         currentSvgShape = null;
     };
     drawLayer.addEventListener('mouseup', stopDrawing);
