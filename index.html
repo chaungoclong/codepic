@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Trình Tạo Ảnh Code (Carbon Clone)</title>
+
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
+
+	<!-- Google Fonts: Inter cho UI, JetBrains Mono cho Code -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+	<!-- Highlight.js CSS Theme Khởi tạo -->
+	<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+
+	<!-- Highlight.js JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+	<!-- html2canvas -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+	<style>
+		body {
+			font-family: 'Inter', sans-serif;
+			background-color: #121212;
+			color: #ffffff;
+		}
+
+		/* Bí quyết để làm editor trực tiếp:
+		   Sử dụng pre/code để hiển thị màu sắc và tạo kích thước cho khung.
+		   Sử dụng textarea đè lên trên chính xác để nhập liệu.
+		*/
+		.code-font {
+			font-family: 'JetBrains Mono', monospace !important;
+			font-size: 15px;
+			line-height: 1.5;
+			tab-size: 4;
+		}
+
+		#highlight-display {
+			/* Loại bỏ background mặc định của highlight.js để dùng background của cửa sổ mac */
+			background: transparent !important;
+			padding: 1.5rem !important;
+			margin: 0;
+			min-height: 100px;
+			overflow-x: auto;
+		}
+
+		#code-editor {
+			color: transparent; /* Ẩn chữ trong textarea */
+			background: transparent; /* Nền trong suốt */
+			caret-color: #ffffff; /* Hiển thị con trỏ chuột màu trắng */
+			padding: 1.5rem;
+			margin: 0;
+			border: none;
+			outline: none;
+			resize: none;
+			white-space: pre;
+			overflow-x: auto;
+			overflow-y: hidden; /* Chiều cao được kiểm soát bởi div cha */
+		}
+
+		/* Tùy chỉnh thanh cuộn đẹp hơn */
+		::-webkit-scrollbar {
+			width: 8px;
+			height: 8px;
+		}
+		::-webkit-scrollbar-track {
+			background: transparent;
+		}
+		::-webkit-scrollbar-thumb {
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 4px;
+		}
+		::-webkit-scrollbar-thumb:hover {
+			background: rgba(255, 255, 255, 0.4);
+		}
+	</style>
+</head>
+<body class="flex flex-col md:flex-row h-screen overflow-hidden">
+
+<!-- Bảng điều khiển bên trái (Sidebar) -->
+<aside class="w-full md:w-80 bg-gray-900 border-r border-gray-800 p-6 flex flex-col gap-6 overflow-y-auto shrink-0 z-10 shadow-xl">
+	<div>
+		<h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-1">Ảnh Code</h1>
+		<p class="text-xs text-gray-400">Tạo hình ảnh source code tuyệt đẹp</p>
+	</div>
+
+	<!-- Khung Điều Khiển -->
+	<div class="flex flex-col gap-5">
+
+		<!-- Chọn Ngôn Ngữ -->
+		<div>
+			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Ngôn ngữ</label>
+			<select id="lang-select" class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
+				<option value="javascript">JavaScript</option>
+				<option value="html">HTML</option>
+				<option value="css">CSS</option>
+				<option value="python">Python</option>
+				<option value="java">Java</option>
+				<option value="cpp">C++</option>
+				<option value="json">JSON</option>
+				<option value="typescript">TypeScript</option>
+				<option value="php">PHP</option>
+				<option value="rust">Rust</option>
+			</select>
+		</div>
+
+		<!-- Chọn Theme -->
+		<div>
+			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Giao diện (Theme)</label>
+			<select id="theme-select" class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
+				<option value="atom-one-dark">Atom One Dark</option>
+				<option value="monokai">Monokai</option>
+				<option value="dracula">Dracula</option>
+				<option value="github-dark">GitHub Dark</option>
+				<option value="nord">Nord</option>
+				<option value="night-owl">Night Owl</option>
+				<option value="vs2015">VS 2015</option>
+			</select>
+		</div>
+
+		<!-- Chọn Hình nền -->
+		<div>
+			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Hình nền</label>
+			<select id="bg-select" class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
+				<option value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">Tím Hoàng Hôn</option>
+				<option value="linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)">Đại Dương Xanh</option>
+				<option value="linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)">Kẹo Ngọt</option>
+				<option value="linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)">Cam Mộng Mơ</option>
+				<option value="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)">Xanh Lá Tươi</option>
+				<option value="linear-gradient(135deg, #fa709a 0%, #fee140 100%)">Mặt Trời</option>
+				<option value="#2a2a2a">Xám Đậm (Không Gradient)</option>
+				<option value="#transparent">Trong suốt</option>
+			</select>
+		</div>
+
+		<!-- Điều chỉnh Padding -->
+		<div>
+			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Khoảng cách (Padding)</label>
+			<input type="range" id="padding-slider" min="16" max="128" value="64" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+			<div class="text-right text-xs text-gray-500 mt-1" id="padding-value">64px</div>
+		</div>
+
+		<hr class="border-gray-800">
+
+		<!-- Nút Tải Xuống -->
+		<button id="export-btn" class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-md shadow-lg transition-transform transform active:scale-95 flex justify-center items-center gap-2">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+			</svg>
+			Lưu Ảnh PNG
+		</button>
+
+		<div id="loading-msg" class="text-center text-sm text-green-400 hidden animate-pulse">Đang tạo ảnh...</div>
+	</div>
+</aside>
+
+<!-- Khu vực Xem trước (Main Canvas) -->
+<main class="flex-1 bg-black relative flex items-center justify-center overflow-auto p-4 custom-scrollbar" id="main-area">
+
+	<!-- Bao bọc khung chứa sẽ được chụp ảnh -->
+	<div id="export-container" class="relative transition-all duration-300 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 64px;">
+
+		<!-- Cửa sổ giả lập hệ điều hành Mac -->
+		<div id="mac-window" class="rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] w-full max-w-4xl min-w-[300px] border border-white/10 flex flex-col" style="background-color: #282c34;">
+
+			<!-- Thanh tiêu đề (Window Header) -->
+			<div class="h-12 flex items-center px-4 relative shrink-0">
+				<!-- 3 nút Mac -->
+				<div class="flex gap-2 absolute left-4">
+					<div class="w-3 h-3 rounded-full bg-[#ff5f56] shadow-sm"></div>
+					<div class="w-3 h-3 rounded-full bg-[#ffbd2e] shadow-sm"></div>
+					<div class="w-3 h-3 rounded-full bg-[#27c93f] shadow-sm"></div>
+				</div>
+				<!-- Tên tệp -->
+				<div class="flex-1 text-center">
+					<input type="text" value="untitled.js" class="bg-transparent border-none text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition w-32 hover:bg-white/5 rounded px-1" spellcheck="false">
+				</div>
+			</div>
+
+			<!-- Khu vực chứa Code Editor -->
+			<div class="relative w-full text-left code-wrapper group">
+				<!-- Lớp hiển thị cú pháp (Syntax Highlighted) -->
+				<pre class="m-0 code-font"><code id="highlight-display" class="language-javascript block">const greeting = "Xin chào các nhà phát triển!";
+
+function createBeautifulCode() {
+    console.log("Đang tải Carbon Clone...");
+
+    // Bạn có thể chỉnh sửa trực tiếp đoạn code này
+    return {
+        success: true,
+        message: greeting,
+        awesomenessLevel: 9001
+    };
+}
+
+createBeautifulCode();</code></pre>
+				<!-- Textarea dùng để nhập liệu, đặt chính xác đè lên thẻ <pre> -->
+				<!-- Sẽ ẩn đi khi chụp ảnh để mất dấu nháy chuột -->
+				<textarea id="code-editor" class="absolute inset-0 w-full h-full code-font" spellcheck="false">const greeting = "Xin chào các nhà phát triển!";
+
+function createBeautifulCode() {
+    console.log("Đang tải Carbon Clone...");
+
+    // Bạn có thể chỉnh sửa trực tiếp đoạn code này
+    return {
+        success: true,
+        message: greeting,
+        awesomenessLevel: 9001
+    };
+}
+
+createBeautifulCode();</textarea>
+			</div>
+		</div>
+	</div>
+</main>
+
+<script>
+    const editor = document.getElementById('code-editor');
+    const display = document.getElementById('highlight-display');
+
+    const langSelect = document.getElementById('lang-select');
+    const themeSelect = document.getElementById('theme-select');
+    const bgSelect = document.getElementById('bg-select');
+    const paddingSlider = document.getElementById('padding-slider');
+
+    const macWindow = document.getElementById('mac-window');
+    const exportContainer = document.getElementById('export-container');
+    const hljsThemeLink = document.getElementById('hljs-theme');
+
+    // Khởi tạo highlight cho nội dung ban đầu
+    hljs.highlightElement(display);
+    syncThemeBackground(); // Đồng bộ nền ban đầu
+
+    // 1. Đồng bộ dữ liệu giữa textarea và thẻ code hiển thị
+    function updateCode() {
+        // Cập nhật text
+        display.textContent = editor.value;
+        // Xóa thuộc tính đã highlight để ép highlight lại
+        delete display.dataset.highlighted;
+        // Áp dụng class ngôn ngữ
+        display.className = `language-${langSelect.value} block`;
+        // Chạy highlight
+        hljs.highlightElement(display);
+        syncThemeBackground();
+    }
+
+    // Bắt sự kiện người dùng gõ phím
+    editor.addEventListener('input', updateCode);
+
+    // Bắt sự kiện nhấn phím Tab để lùi đầu dòng thay vì đổi tiêu điểm
+    editor.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            // Chèn 4 dấu cách
+            this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+            // Đặt lại vị trí con trỏ
+            this.selectionStart = this.selectionEnd = start + 4;
+            updateCode();
+        }
+    });
+
+    // Đồng bộ thanh cuộn (nếu code quá dài và hiện thanh cuộn)
+    editor.addEventListener('scroll', () => {
+        display.parentElement.scrollTop = editor.scrollTop;
+        display.parentElement.scrollLeft = editor.scrollLeft;
+    });
+
+    // 2. Chức năng đổi ngôn ngữ lập trình
+    langSelect.addEventListener('change', () => {
+        updateCode();
+    });
+
+    // 3. Chức năng đổi Theme màu
+    themeSelect.addEventListener('change', () => {
+        const theme = themeSelect.value;
+        // Đổi URL của thư viện CSS
+        hljsThemeLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/${theme}.min.css`;
+        // Cập nhật lại màu nền của cửa sổ giả lập theo theme
+        setTimeout(syncThemeBackground, 150); // Chờ 150ms cho CSS mới được nạp
+    });
+
+    // Hàm giúp trích xuất màu nền chính của Theme đang chọn
+    function syncThemeBackground() {
+        // Lấy màu nền mặc định của thẻ class "hljs" (được sinh ra bởi Highlight.js)
+        const computedStyle = window.getComputedStyle(display);
+        let bgColor = computedStyle.backgroundColor;
+
+        // Nếu màu là trong suốt (transparent), dùng một màu tối mặc định
+        if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') {
+            bgColor = '#1e1e1e';
+        }
+
+        macWindow.style.backgroundColor = bgColor;
+
+        // Đổi màu con trỏ (caret) của textarea dựa trên độ sáng của nền để dễ nhìn
+        const rgb = bgColor.match(/\d+/g);
+        if (rgb) {
+            const brightness = Math.round(((parseInt(rgb[0]) * 299) + (parseInt(rgb[1]) * 587) + (parseInt(rgb[2]) * 114)) / 1000);
+            editor.style.caretColor = (brightness > 125) ? '#000000' : '#ffffff';
+        }
+    }
+
+    // 4. Chức năng đổi Hình nền (Background)
+    bgSelect.addEventListener('change', () => {
+        exportContainer.style.background = bgSelect.value;
+    });
+
+    // 5. Chức năng điều chỉnh Khoảng cách (Padding)
+    paddingSlider.addEventListener('input', () => {
+        const val = paddingSlider.value;
+        document.getElementById('padding-value').innerText = `${val}px`;
+        exportContainer.style.padding = `${val}px`;
+    });
+
+    // 6. Chức năng Xuất Ảnh (Export to PNG)
+    document.getElementById('export-btn').addEventListener('click', async () => {
+        const btn = document.getElementById('export-btn');
+        const msg = document.getElementById('loading-msg');
+
+        // Hiện loading
+        btn.disabled = true;
+        btn.classList.add('opacity-50');
+        msg.classList.remove('hidden');
+
+        // Ẩn textarea đi để trong ảnh không xuất hiện con trỏ nhấp nháy
+        editor.style.display = 'none';
+
+        try {
+            // Đợi 1 chút để DOM cập nhật (ẩn textarea)
+            await new Promise(r => setTimeout(r, 50));
+
+            const canvas = await html2canvas(exportContainer, {
+                scale: 2, // Tăng tỷ lệ (scale) để ảnh nét hơn (giống Retina)
+                backgroundColor: null, // Giữ độ trong suốt (nếu background là transparent)
+                useCORS: true, // Hỗ trợ tài nguyên cross-origin
+                logging: false
+            });
+
+            // Khôi phục lại thẻ textarea
+            editor.style.display = 'block';
+
+            // Tải file
+            const link = document.createElement('a');
+            link.download = 'code-snippet.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        } catch (err) {
+            console.error("Lỗi tạo ảnh: ", err);
+            alert("Đã xảy ra lỗi khi tạo ảnh. Vui lòng thử lại!");
+            editor.style.display = 'block'; // Khôi phục nếu lỗi
+        } finally {
+            // Tắt loading
+            btn.disabled = false;
+            btn.classList.remove('opacity-50');
+            msg.classList.add('hidden');
+        }
+    });
+
+    // Lần đầu load, áp dụng nền mặc định từ select
+    exportContainer.style.background = bgSelect.value;
+</script>
+</body>
+</html>
