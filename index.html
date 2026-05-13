@@ -11,16 +11,23 @@
 	<!-- Google Fonts: Inter cho UI, JetBrains Mono cho Code -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+	      rel="stylesheet">
 
 	<!-- Highlight.js CSS Theme Khởi tạo -->
-	<link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+	<link id="hljs-theme" rel="stylesheet"
+	      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
 
 	<!-- Highlight.js JS -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
 	<!-- html2canvas -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+	<!-- JS Beautify (Format Code) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
 
 	<style>
 		body {
@@ -29,52 +36,76 @@
 			color: #ffffff;
 		}
 
-		/* Bí quyết để làm editor trực tiếp:
-		   Sử dụng pre/code để hiển thị màu sắc và tạo kích thước cho khung.
-		   Sử dụng textarea đè lên trên chính xác để nhập liệu.
+		/* Bí quyết tạo Editor: Đặt Textarea và Pre chồng khít lên nhau bằng CSS Grid.
 		*/
-		.code-font {
+		.code-grid-wrapper {
+			display: grid;
+			position: relative;
+			width: 100%;
+		}
+
+		.code-grid-wrapper > * {
+			grid-area: 1 / 1;
+			margin: 0 !important;
+			padding: 1.5rem !important;
+			box-sizing: border-box;
 			font-family: 'JetBrains Mono', monospace !important;
 			font-size: 15px;
 			line-height: 1.5;
 			tab-size: 4;
+
+			/* Đảm bảo tự động xuống dòng (wrap) thay vì tràn ra ngoài */
+			white-space: pre-wrap !important;
+			word-break: break-word !important;
+			overflow-wrap: break-word !important;
+			min-height: 100px;
+		}
+
+		pre {
+			z-index: 1;
+			/* QUAN TRỌNG: Cho phép chuột click xuyên qua lớp này xuống Textarea */
+			pointer-events: none;
+			background: transparent !important;
 		}
 
 		#highlight-display {
-			/* Loại bỏ background mặc định của highlight.js để dùng background của cửa sổ mac */
+			padding: 0 !important; /* Xóa padding thừa vì thẻ pre bọc ngoài đã có */
 			background: transparent !important;
-			padding: 1.5rem !important;
-			margin: 0;
-			min-height: 100px;
-			overflow-x: auto;
+			overflow: visible !important;
 		}
 
 		#code-editor {
-			color: transparent; /* Ẩn chữ trong textarea */
-			background: transparent; /* Nền trong suốt */
-			caret-color: #ffffff; /* Hiển thị con trỏ chuột màu trắng */
-			padding: 1.5rem;
-			margin: 0;
+			z-index: 2; /* Luôn nằm trên để nhận sự kiện Paste, Click */
+			color: transparent; /* Ẩn chữ thật đi */
+			background: transparent;
+			caret-color: #ffffff; /* Chỉ giữ lại con trỏ chuột */
 			border: none;
 			outline: none;
 			resize: none;
-			white-space: pre;
-			overflow-x: auto;
-			overflow-y: hidden; /* Chiều cao được kiểm soát bởi div cha */
+			overflow: hidden; /* Không cần thanh cuộn vì grid tự giãn chiều cao */
 		}
 
-		/* Tùy chỉnh thanh cuộn đẹp hơn */
-		::-webkit-scrollbar {
-			width: 8px;
-			height: 8px;
+		/* Làm đẹp màu bôi đen (selection) */
+		#code-editor::selection {
+			background: rgba(100, 150, 255, 0.3);
+			color: transparent;
 		}
+
+		/* Tùy chỉnh thanh cuộn UI */
+		::-webkit-scrollbar {
+			width: 10px;
+			height: 10px;
+		}
+
 		::-webkit-scrollbar-track {
 			background: transparent;
 		}
+
 		::-webkit-scrollbar-thumb {
 			background: rgba(255, 255, 255, 0.2);
 			border-radius: 4px;
 		}
+
 		::-webkit-scrollbar-thumb:hover {
 			background: rgba(255, 255, 255, 0.4);
 		}
@@ -91,11 +122,11 @@
 
 	<!-- Khung Điều Khiển -->
 	<div class="flex flex-col gap-5">
-
 		<!-- Chọn Ngôn Ngữ -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Ngôn ngữ</label>
-			<select id="lang-select" class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
+			<select id="lang-select"
+			        class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
 				<option value="javascript">JavaScript</option>
 				<option value="html">HTML</option>
 				<option value="css">CSS</option>
@@ -112,7 +143,8 @@
 		<!-- Chọn Theme -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Giao diện (Theme)</label>
-			<select id="theme-select" class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
+			<select id="theme-select"
+			        class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
 				<option value="atom-one-dark">Atom One Dark</option>
 				<option value="monokai">Monokai</option>
 				<option value="dracula">Dracula</option>
@@ -126,7 +158,8 @@
 		<!-- Chọn Hình nền -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Hình nền</label>
-			<select id="bg-select" class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
+			<select id="bg-select"
+			        class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
 				<option value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">Tím Hoàng Hôn</option>
 				<option value="linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)">Đại Dương Xanh</option>
 				<option value="linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)">Kẹo Ngọt</option>
@@ -141,16 +174,30 @@
 		<!-- Điều chỉnh Padding -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Khoảng cách (Padding)</label>
-			<input type="range" id="padding-slider" min="16" max="128" value="64" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+			<input type="range" id="padding-slider" min="16" max="128" value="64"
+			       class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
 			<div class="text-right text-xs text-gray-500 mt-1" id="padding-value">64px</div>
 		</div>
+
+		<!-- Nút Format Code -->
+		<button id="format-btn"
+		        class="w-full py-2 px-4 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 font-medium rounded-md transition duration-200 flex justify-center items-center gap-2">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+			     stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+			</svg>
+			Format Code
+		</button>
 
 		<hr class="border-gray-800">
 
 		<!-- Nút Tải Xuống -->
-		<button id="export-btn" class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-md shadow-lg transition-transform transform active:scale-95 flex justify-center items-center gap-2">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+		<button id="export-btn"
+		        class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-md shadow-lg transition-transform transform active:scale-95 flex justify-center items-center gap-2">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+			     stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+				      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
 			</svg>
 			Lưu Ảnh PNG
 		</button>
@@ -160,32 +207,42 @@
 </aside>
 
 <!-- Khu vực Xem trước (Main Canvas) -->
-<main class="flex-1 bg-black relative flex items-center justify-center overflow-auto p-4 custom-scrollbar" id="main-area">
+<main class="flex-1 bg-black relative flex items-start justify-center overflow-auto p-4 md:p-10 custom-scrollbar"
+      id="main-area">
 
 	<!-- Bao bọc khung chứa sẽ được chụp ảnh -->
-	<div id="export-container" class="relative transition-all duration-300 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 64px;">
+	<div id="export-container"
+	     class="relative transition-all duration-300 rounded-lg flex items-center justify-center shrink-0"
+	     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 64px;">
 
 		<!-- Cửa sổ giả lập hệ điều hành Mac -->
-		<div id="mac-window" class="rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] w-full max-w-4xl min-w-[300px] border border-white/10 flex flex-col" style="background-color: #282c34;">
+		<div id="mac-window"
+		     class="rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] w-[800px] min-w-[350px] border border-white/10 flex flex-col relative group"
+		     style="background-color: #282c34;">
+
+			<!-- Thanh kéo để thay đổi kích thước (Resize handles) -->
+			<div class="resize-handle left absolute left-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-l-xl z-20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+			<div class="resize-handle right absolute right-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-r-xl z-20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
 			<!-- Thanh tiêu đề (Window Header) -->
 			<div class="h-12 flex items-center px-4 relative shrink-0">
 				<!-- 3 nút Mac -->
-				<div class="flex gap-2 absolute left-4">
+				<div class="flex gap-2 absolute left-4 z-10">
 					<div class="w-3 h-3 rounded-full bg-[#ff5f56] shadow-sm"></div>
 					<div class="w-3 h-3 rounded-full bg-[#ffbd2e] shadow-sm"></div>
 					<div class="w-3 h-3 rounded-full bg-[#27c93f] shadow-sm"></div>
 				</div>
 				<!-- Tên tệp -->
-				<div class="flex-1 text-center">
-					<input type="text" value="untitled.js" class="bg-transparent border-none text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition w-32 hover:bg-white/5 rounded px-1" spellcheck="false">
+				<div class="flex-1 flex justify-center px-20">
+					<span id="file-title" contenteditable="true" spellcheck="false"
+					      class="text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition hover:bg-white/5 rounded px-3 py-1 min-w-[50px] max-w-[250px] whitespace-nowrap overflow-hidden relative z-0 leading-normal block cursor-text">untitled.js</span>
 				</div>
 			</div>
 
 			<!-- Khu vực chứa Code Editor -->
-			<div class="relative w-full text-left code-wrapper group">
+			<div class="relative w-full text-left code-grid-wrapper">
 				<!-- Lớp hiển thị cú pháp (Syntax Highlighted) -->
-				<pre class="m-0 code-font"><code id="highlight-display" class="language-javascript block">const greeting = "Xin chào các nhà phát triển!";
+				<pre class="m-0"><code id="highlight-display" class="language-javascript block">const greeting = "Xin chào các nhà phát triển!";
 
 function createBeautifulCode() {
     console.log("Đang tải Carbon Clone...");
@@ -199,9 +256,8 @@ function createBeautifulCode() {
 }
 
 createBeautifulCode();</code></pre>
-				<!-- Textarea dùng để nhập liệu, đặt chính xác đè lên thẻ <pre> -->
-				<!-- Sẽ ẩn đi khi chụp ảnh để mất dấu nháy chuột -->
-				<textarea id="code-editor" class="absolute inset-0 w-full h-full code-font" spellcheck="false">const greeting = "Xin chào các nhà phát triển!";
+				<!-- Textarea dùng để nhập liệu -->
+				<textarea id="code-editor" spellcheck="false">const greeting = "Xin chào các nhà phát triển!";
 
 function createBeautifulCode() {
     console.log("Đang tải Carbon Clone...");
@@ -233,74 +289,58 @@ createBeautifulCode();</textarea>
     const exportContainer = document.getElementById('export-container');
     const hljsThemeLink = document.getElementById('hljs-theme');
 
-    // Khởi tạo highlight cho nội dung ban đầu
+    // Khởi tạo
     hljs.highlightElement(display);
-    syncThemeBackground(); // Đồng bộ nền ban đầu
+    syncThemeBackground();
 
-    // 1. Đồng bộ dữ liệu giữa textarea và thẻ code hiển thị
+    // 1. Đồng bộ dữ liệu
     function updateCode() {
-        // Cập nhật text
-        display.textContent = editor.value;
-        // Xóa thuộc tính đã highlight để ép highlight lại
+        // Cập nhật text, dùng " " nếu rỗng để grid không bị xẹp
+        display.textContent = editor.value || " ";
         delete display.dataset.highlighted;
-        // Áp dụng class ngôn ngữ
         display.className = `language-${langSelect.value} block`;
-        // Chạy highlight
         hljs.highlightElement(display);
         syncThemeBackground();
     }
 
-    // Bắt sự kiện người dùng gõ phím
+    // Bắt sự kiện người dùng gõ phím hoặc Dán (Paste)
     editor.addEventListener('input', updateCode);
 
-    // Bắt sự kiện nhấn phím Tab để lùi đầu dòng thay vì đổi tiêu điểm
-    editor.addEventListener('keydown', function(e) {
+    // Cố định thêm sự kiện Paste để đảm bảo mượt mà mọi trình duyệt
+    editor.addEventListener('paste', () => {
+        setTimeout(updateCode, 10);
+    });
+
+    // Bắt sự kiện nhấn phím Tab
+    editor.addEventListener('keydown', function (e) {
         if (e.key === 'Tab') {
             e.preventDefault();
             const start = this.selectionStart;
             const end = this.selectionEnd;
-            // Chèn 4 dấu cách
             this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
-            // Đặt lại vị trí con trỏ
             this.selectionStart = this.selectionEnd = start + 4;
             updateCode();
         }
     });
 
-    // Đồng bộ thanh cuộn (nếu code quá dài và hiện thanh cuộn)
-    editor.addEventListener('scroll', () => {
-        display.parentElement.scrollTop = editor.scrollTop;
-        display.parentElement.scrollLeft = editor.scrollLeft;
-    });
-
     // 2. Chức năng đổi ngôn ngữ lập trình
-    langSelect.addEventListener('change', () => {
-        updateCode();
-    });
+    langSelect.addEventListener('change', updateCode);
 
     // 3. Chức năng đổi Theme màu
     themeSelect.addEventListener('change', () => {
         const theme = themeSelect.value;
-        // Đổi URL của thư viện CSS
         hljsThemeLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/${theme}.min.css`;
-        // Cập nhật lại màu nền của cửa sổ giả lập theo theme
-        setTimeout(syncThemeBackground, 150); // Chờ 150ms cho CSS mới được nạp
+        setTimeout(syncThemeBackground, 150);
     });
 
-    // Hàm giúp trích xuất màu nền chính của Theme đang chọn
     function syncThemeBackground() {
-        // Lấy màu nền mặc định của thẻ class "hljs" (được sinh ra bởi Highlight.js)
         const computedStyle = window.getComputedStyle(display);
         let bgColor = computedStyle.backgroundColor;
-
-        // Nếu màu là trong suốt (transparent), dùng một màu tối mặc định
         if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') {
             bgColor = '#1e1e1e';
         }
-
         macWindow.style.backgroundColor = bgColor;
 
-        // Đổi màu con trỏ (caret) của textarea dựa trên độ sáng của nền để dễ nhìn
         const rgb = bgColor.match(/\d+/g);
         if (rgb) {
             const brightness = Math.round(((parseInt(rgb[0]) * 299) + (parseInt(rgb[1]) * 587) + (parseInt(rgb[2]) * 114)) / 1000);
@@ -308,63 +348,125 @@ createBeautifulCode();</textarea>
         }
     }
 
-    // 4. Chức năng đổi Hình nền (Background)
+    // 4. Chức năng đổi Hình nền
     bgSelect.addEventListener('change', () => {
         exportContainer.style.background = bgSelect.value;
     });
 
-    // 5. Chức năng điều chỉnh Khoảng cách (Padding)
+    // 5. Chức năng điều chỉnh Khoảng cách
     paddingSlider.addEventListener('input', () => {
         const val = paddingSlider.value;
         document.getElementById('padding-value').innerText = `${val}px`;
         exportContainer.style.padding = `${val}px`;
     });
 
-    // 6. Chức năng Xuất Ảnh (Export to PNG)
+    // 6. Chức năng Format Code
+    document.getElementById('format-btn').addEventListener('click', () => {
+        let code = editor.value;
+        const lang = langSelect.value;
+
+        try {
+            if (['javascript', 'json', 'typescript', 'java', 'cpp', 'php'].includes(lang)) {
+                code = js_beautify(code, {indent_size: 4, preserve_newlines: true});
+            } else if (lang === 'html') {
+                code = html_beautify(code, {indent_size: 4});
+            } else if (lang === 'css') {
+                code = css_beautify(code, {indent_size: 4});
+            }
+            editor.value = code;
+            updateCode();
+        } catch (err) {
+            console.error(err);
+            alert("Ngôn ngữ này chưa được hỗ trợ format tự động hoặc code đang bị lỗi cú pháp.");
+        }
+    });
+
+    // 7. Logic Kéo thả đổi chiều rộng
+    const resizeHandles = document.querySelectorAll('.resize-handle');
+    let isResizing = false;
+    let startX = 0;
+    let startWidth = 0;
+
+    resizeHandles.forEach(handle => {
+        handle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            startX = e.clientX;
+            startWidth = parseInt(document.defaultView.getComputedStyle(macWindow).width, 10);
+            macWindow.style.transition = 'none';
+            e.preventDefault();
+        });
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        const rect = macWindow.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const newHalfWidth = Math.abs(e.clientX - centerX);
+
+        let newWidth = newHalfWidth * 2;
+        newWidth = Math.max(350, Math.min(newWidth, 1400));
+        macWindow.style.width = `${newWidth}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isResizing) {
+            isResizing = false;
+            macWindow.style.transition = '';
+        }
+    });
+
+    // 8. Chức năng Xuất Ảnh
     document.getElementById('export-btn').addEventListener('click', async () => {
         const btn = document.getElementById('export-btn');
         const msg = document.getElementById('loading-msg');
 
-        // Hiện loading
         btn.disabled = true;
         btn.classList.add('opacity-50');
         msg.classList.remove('hidden');
 
-        // Ẩn textarea đi để trong ảnh không xuất hiện con trỏ nhấp nháy
+        // Ẩn textarea để mất con trỏ nhấp nháy khi chụp
         editor.style.display = 'none';
 
         try {
-            // Đợi 1 chút để DOM cập nhật (ẩn textarea)
-            await new Promise(r => setTimeout(r, 50));
+            await new Promise(r => setTimeout(r, 100));
 
             const canvas = await html2canvas(exportContainer, {
-                scale: 2, // Tăng tỷ lệ (scale) để ảnh nét hơn (giống Retina)
-                backgroundColor: null, // Giữ độ trong suốt (nếu background là transparent)
-                useCORS: true, // Hỗ trợ tài nguyên cross-origin
+                scale: 2,
+                backgroundColor: null,
+                useCORS: true,
                 logging: false
             });
 
-            // Khôi phục lại thẻ textarea
             editor.style.display = 'block';
 
-            // Tải file
             const link = document.createElement('a');
             link.download = 'code-snippet.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         } catch (err) {
-            console.error("Lỗi tạo ảnh: ", err);
-            alert("Đã xảy ra lỗi khi tạo ảnh. Vui lòng thử lại!");
-            editor.style.display = 'block'; // Khôi phục nếu lỗi
+            alert("Đã xảy ra lỗi khi tạo ảnh!");
+            editor.style.display = 'block';
         } finally {
-            // Tắt loading
             btn.disabled = false;
             btn.classList.remove('opacity-50');
             msg.classList.add('hidden');
         }
     });
 
-    // Lần đầu load, áp dụng nền mặc định từ select
+    // Xử lý sự kiện cho tên tệp (ngăn xuống dòng và dán HTML format)
+    const fileTitle = document.getElementById('file-title');
+    fileTitle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            fileTitle.blur(); // Thoát khỏi trạng thái chỉnh sửa
+        }
+    });
+    fileTitle.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+        document.execCommand('insertText', false, text);
+    });
+
     exportContainer.style.background = bgSelect.value;
 </script>
 </body>
