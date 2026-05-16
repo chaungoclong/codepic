@@ -3,7 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Trình Tạo Ảnh Code - Bản Thiết Kế Mới</title>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZH8GNL7T2Q"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZH8GNL7T2Q');
+    </script>
+
+    <!-- Primary Meta Tags -->
+    <title>CodePic - Tạo Ảnh Code Snippet Đẹp, Tùy Chỉnh Chuyên Nghiệp</title>
+    <meta name="title" content="CodePic - Tạo Ảnh Code Snippet Đẹp, Tùy Chỉnh Chuyên Nghiệp">
+    <meta name="description" content="CodePic là công cụ trực tuyến miễn phí giúp tạo ảnh từ code (code snippet) tuyệt đẹp. Hỗ trợ highlight cú pháp nhiều ngôn ngữ, đổi theme, màu nền và vẽ ghi chú.">
+    <meta name="keywords" content="tạo ảnh code, code to image, code snippet, chia sẻ code, highlight cú pháp, trình tạo ảnh code, CodePic">
+    <meta name="author" content="CodePic">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Vietnamese">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://codepic.dragontnt.online/">
+
+    <!-- Open Graph / Facebook / Zalo -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://codepic.dragontnt.online/">
+    <meta property="og:title" content="CodePic - Tạo Ảnh Code Snippet Đẹp & Nhanh Chóng">
+    <meta property="og:description" content="Biến đoạn code của bạn thành những bức ảnh tuyệt đẹp chỉ trong vài giây. Hỗ trợ tùy chỉnh giao diện, màu nền và vẽ ghi chú trực tiếp.">
+    <meta property="og:image" content="https://codepic.dragontnt.online/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://codepic.dragontnt.online/">
+    <meta property="twitter:title" content="CodePic - Tạo Ảnh Code Snippet Đẹp & Nhanh Chóng">
+    <meta property="twitter:description" content="Biến đoạn code của bạn thành những bức ảnh tuyệt đẹp chỉ trong vài giây. Hỗ trợ tùy chỉnh giao diện, màu nền và vẽ ghi chú trực tiếp.">
+    <meta property="twitter:image" content="https://codepic.dragontnt.online/og-image.jpg">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,7 +52,8 @@
                         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
                     },
                     colors: {
-                        primary: '#6366f1',
+                        primary: '#10b981', /* Mint Green / Emerald 500 */
+                        'primary-hover': '#059669', /* Emerald 600 */
                     }
                 }
             }
@@ -93,6 +129,21 @@
         }
         .dark #code-editor { caret-color: #f8fafc; }
 
+        /* Hiệu ứng chuyển động sóng hình sin & vô định hình cho nền chấm */
+        @keyframes driftX {
+            0% { background-position-x: 0px; }
+            100% { background-position-x: 100px; }
+        }
+        @keyframes waveY {
+            0%, 100% { background-position-y: 0px; }
+            50% { background-position-y: 15px; }
+        }
+        .animated-dots {
+            /* Kết hợp X tịnh tiến đều và Y dao động để tạo sóng hình sin. 
+               Thời gian lệch nhau (8s và 5s) tạo cảm giác trôi nổi vô định hình */
+            animation: driftX 8s linear infinite, waveY 5s ease-in-out infinite;
+        }
+
         /* Export Container Transition */
         #export-container {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -106,14 +157,14 @@
 
         /* Tool active state */
         .tool-btn.active {
-            background-color: #e0e7ff;
-            color: #4f46e5;
-            border-color: #c7d2fe;
+            background-color: #d1fae5; /* emerald-100 */
+            color: #059669; /* emerald-600 */
+            border-color: #a7f3d0; /* emerald-200 */
         }
         .dark .tool-btn.active {
-            background-color: #3730a3;
-            color: #e0e7ff;
-            border-color: #4f46e5;
+            background-color: rgba(6, 78, 59, 0.5); /* emerald-900/50 */
+            color: #34d399; /* emerald-400 */
+            border-color: #10b981; /* emerald-500 */
         }
 
         /* Color picker custom style */
@@ -154,8 +205,14 @@
                 <button id="mobile-menu-btn" class="sm:hidden p-2 -ml-1 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 rounded-lg transition-colors" title="Menu">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <div class="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500 select-none" data-i18n="app_title">
-                    CodePic
+                
+                <!-- SEO Tối ưu: Dùng thẻ <h1> thay vì <div> cho tiêu đề trang -->
+                <div class="flex flex-col">
+                    <h1 class="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-500 select-none leading-tight" data-i18n="app_title">
+                        CodePic
+                    </h1>
+                    <!-- Thẻ <h2> mô tả chức năng được ẩn đi nhưng bot Google vẫn đọc được -->
+                    <h2 class="sr-only">Trình Tạo Ảnh Code Snippet</h2>
                 </div>
             </div>
             
@@ -163,7 +220,7 @@
 
             <!-- Settings Group (Collapsible on Mobile) -->
             <div id="settings-group" class="hidden sm:flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2 absolute sm:relative top-full left-0 w-full sm:w-auto bg-white dark:bg-neutral-900 sm:bg-transparent p-4 sm:p-0 border-b border-gray-200 dark:border-neutral-800 sm:border-0 shadow-xl sm:shadow-none z-50 overflow-x-auto no-scrollbar">
-                <select id="lang-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer w-full sm:w-36 shrink-0" title="Ngôn ngữ Lập trình" data-i18n-title="lang_select_title">
+                <select id="lang-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-36 shrink-0" title="Ngôn ngữ Lập trình" data-i18n-title="lang_select_title">
                     <option value="javascript">JavaScript</option>
                     <option value="html">HTML</option>
                     <option value="css">CSS</option>
@@ -182,7 +239,7 @@
                     <option value="xml">XML</option>
                 </select>
 
-                <select id="theme-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer w-full sm:w-40 shrink-0" title="Theme Code" data-i18n-title="theme_select_title">
+                <select id="theme-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-40 shrink-0" title="Theme Code" data-i18n-title="theme_select_title">
                     <option value="atom-one-dark">Atom One Dark</option>
                     <option value="monokai">Monokai</option>
                     <option value="base16/dracula">Dracula</option>
@@ -191,7 +248,7 @@
                     <option value="vs2015">VS 2015</option>
                 </select>
 
-                <select id="bg-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer w-full sm:w-44 shrink-0" title="Màu nền" data-i18n-title="bg_select_title">
+                <select id="bg-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-44 shrink-0" title="Màu nền" data-i18n-title="bg_select_title">
                     <option value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)" data-i18n="bg_purple">Tím Hoàng Hôn</option>
                     <option value="linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)" data-i18n="bg_blue">Đại Dương Xanh</option>
                     <option value="linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)" data-i18n="bg_candy">Kẹo Ngọt</option>
@@ -226,7 +283,7 @@
                     <span data-i18n="btn_format">Format</span>
                 </button>
 
-                <button id="export-btn" class="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-all">
+                <button id="export-btn" class="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm transition-all">
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     <span data-i18n="btn_export" class="hidden sm:inline whitespace-nowrap">Lưu ảnh</span>
                 </button>
@@ -235,7 +292,7 @@
     </header>
 
     <!-- MAIN WORKSPACE -->
-    <main class="flex-1 relative overflow-auto bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNlN2U1ZTQiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiM0MDRhNTIiIGZpbGwtb3BhY2l0eT0iMC4yIi8+PC9zdmc+')] pb-32">
+    <main class="animated-dots flex-1 relative overflow-auto bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNlN2U1ZTQiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiM0MDRhNTIiIGZpbGwtb3BhY2l0eT0iMC4yIi8+PC9zdmc+')] pb-32">
         
         <!-- Canvas wrapper -->
         <div class="min-h-full flex items-center justify-center p-4 sm:p-8">
@@ -321,7 +378,7 @@ function createBeautifulCode() {
 
             <!-- Color Picker -->
             <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-200 dark:border-neutral-700 shrink-0 relative cursor-pointer" title="Chọn màu vẽ" data-i18n-title="tool_color_title">
-                <input type="color" id="draw-color" value="#ef4444" class="absolute -inset-2 w-[200%] h-[200%] cursor-pointer">
+                <input type="color" id="draw-color" value="#10b981" class="absolute -inset-2 w-[200%] h-[200%] cursor-pointer">
             </div>
 
             <div class="w-px h-6 bg-gray-200 dark:bg-neutral-700 mx-1 shrink-0"></div>
@@ -480,7 +537,8 @@ function createBeautifulCode() {
         const themeToggle = document.getElementById('theme-toggle');
         const htmlElement = document.documentElement;
         
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        // Cập nhật để Dark Mode trở thành mặc định nếu user chưa có settings
+        if (!('theme' in localStorage) || localStorage.theme === 'dark') {
             htmlElement.classList.add('dark');
         } else {
             htmlElement.classList.remove('dark');
@@ -652,6 +710,7 @@ function createBeautifulCode() {
         }
 
         bgSelect.addEventListener('change', () => exportContainer.style.background = bgSelect.value);
+        
         if(paddingSlider) {
              paddingSlider.addEventListener('input', () => exportContainer.style.padding = `${paddingSlider.value}px`);
         }
