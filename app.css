@@ -1,0 +1,177 @@
+/* Base styles */
+body {
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden; /* Prevent body scroll, handle inside main */
+  overscroll-behavior: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.4);
+}
+
+/* Hide scrollbar for topnav */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Code Editor Overlays */
+.code-grid-wrapper {
+  display: grid;
+  width: 100%;
+  position: relative;
+}
+.code-grid-wrapper > * {
+  grid-area: 1/1;
+  margin: 0 !important;
+  padding: 1.5rem !important;
+  box-sizing: border-box;
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 15px;
+  line-height: 1.5;
+  tab-size: 4;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  min-height: 200px;
+}
+
+pre {
+  z-index: 1;
+  pointer-events: none;
+  background: transparent !important;
+}
+#highlight-display {
+  padding: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+#code-editor {
+  z-index: 2;
+  color: transparent !important;
+  background: transparent !important;
+  caret-color: #0f172a;
+  border: none;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+}
+.dark #code-editor {
+  caret-color: #f8fafc;
+}
+
+/* Hiệu ứng chuyển động sóng hình sin & vô định hình cho nền chấm */
+@keyframes driftX {
+  0% {
+    background-position-x: 0px;
+  }
+  100% {
+    background-position-x: 100px;
+  }
+}
+@keyframes waveY {
+  0%,
+  100% {
+    background-position-y: 0px;
+  }
+  50% {
+    background-position-y: 15px;
+  }
+}
+.animated-dots {
+  /* Kết hợp X tịnh tiến đều và Y dao động để tạo sóng hình sin. 
+               Thời gian lệch nhau (8s và 5s) tạo cảm giác trôi nổi vô định hình */
+  animation:
+    driftX 8s linear infinite,
+    waveY 5s ease-in-out infinite;
+}
+
+/* Export Container Transition */
+#export-container {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  padding: 64px;
+  transition:
+    padding 0.2s ease,
+    background 0.3s ease;
+}
+
+#mac-window {
+  transition: width 0s; /* Prevent lag during resize */
+}
+
+/* Tool active state */
+.tool-btn.active {
+  background-color: #d1fae5; /* emerald-100 */
+  color: #059669; /* emerald-600 */
+  border-color: #a7f3d0; /* emerald-200 */
+}
+.dark .tool-btn.active {
+  background-color: rgba(6, 78, 59, 0.5); /* emerald-900/50 */
+  color: #34d399; /* emerald-400 */
+  border-color: #10b981; /* emerald-500 */
+}
+
+/* Color picker custom style */
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+/* Fix dark mode select options */
+.dark select option {
+  background-color: #262626; /* neutral-800 */
+  color: #f3f4f6; /* gray-100 */
+}
+
+/* Drawing canvas touch action */
+#draw-layer {
+  touch-action: none;
+}
+
+@media (max-width: 640px) {
+  .code-grid-wrapper > * {
+    font-size: 13px;
+    padding: 1rem !important;
+    min-height: 160px;
+  }
+  #export-container {
+    padding: 24px !important;
+  }
+  #mac-window {
+    width: 100% !important;
+    min-width: 100%;
+    border-radius: 8px;
+  }
+  .resize-handle {
+    display: none;
+  }
+}
