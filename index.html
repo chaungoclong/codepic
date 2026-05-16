@@ -1,881 +1,833 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Trình Tạo Ảnh Code (Carbon Clone)</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Trình Tạo Ảnh Code - Bản Thiết Kế Mới</title>
 
-	<!-- Tailwind CSS -->
-	<script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#6366f1',
+                    }
+                }
+            }
+        }
+    </script>
 
-	<!-- Google Fonts -->
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-	      rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-	<!-- Highlight.js -->
-	<link id="hljs-theme" rel="stylesheet"
-	      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <!-- Highlight.js -->
+    <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
-	<!-- html2canvas -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-	<!-- JS Beautify -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
+    <!-- JS Beautify -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
 
-	<style>
-		body {
-			font-family: 'Inter', sans-serif;
-			background-color: #121212;
-			color: #ffffff;
-		}
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow: hidden; /* Prevent body scroll, handle inside main */
+            overscroll-behavior: none;
+        }
 
-		.code-grid-wrapper {
-			display: grid;
-			position: relative;
-			width: 100%;
-		}
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.5); }
+        .dark ::-webkit-scrollbar-thumb { background: rgba(75, 85, 99, 0.4); }
 
-		.code-grid-wrapper > * {
-			grid-area: 1 / 1;
-			margin: 0 !important;
-			padding: 1.5rem !important;
-			box-sizing: border-box;
-			font-family: 'JetBrains Mono', monospace !important;
-			font-size: 15px;
-			line-height: 1.5;
-			tab-size: 4;
-			white-space: pre-wrap !important;
-			word-break: break-word !important;
-			overflow-wrap: break-word !important;
-			min-height: 100px;
-		}
+        /* Hide scrollbar for topnav */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-		pre {
-			z-index: 1;
-			pointer-events: none;
-			background: transparent !important;
-		}
+        /* Code Editor Overlays */
+        .code-grid-wrapper { display: grid; width: 100%; position: relative; }
+        .code-grid-wrapper > * {
+            grid-area: 1/1;
+            margin: 0 !important;
+            padding: 1.5rem !important;
+            box-sizing: border-box;
+            font-family: 'JetBrains Mono', monospace !important;
+            font-size: 15px;
+            line-height: 1.5;
+            tab-size: 4;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
+            min-height: 200px;
+        }
 
-		#highlight-display {
-			padding: 0 !important;
-			background: transparent !important;
-			overflow: visible !important;
-		}
+        pre { z-index: 1; pointer-events: none; background: transparent !important; }
+        #highlight-display { padding: 0 !important; background: transparent !important; overflow: visible !important; }
+        
+        #code-editor {
+            z-index: 2;
+            color: transparent !important;
+            background: transparent !important;
+            caret-color: #0f172a;
+            border: none;
+            outline: none;
+            resize: none;
+            overflow: hidden;
+        }
+        .dark #code-editor { caret-color: #f8fafc; }
 
-		#code-editor {
-			z-index: 2;
-			color: transparent;
-			background: transparent;
-			caret-color: #ffffff;
-			border: none;
-			outline: none;
-			resize: none;
-			overflow: hidden;
-		}
+        /* Export Container Transition */
+        #export-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 64px;
+            transition: padding 0.2s ease, background 0.3s ease;
+        }
 
-		#code-editor::selection {
-			background: rgba(100, 150, 255, 0.3);
-			color: transparent;
-		}
+        #mac-window {
+            transition: width 0s; /* Prevent lag during resize */
+        }
 
-		::-webkit-scrollbar {
-			width: 10px;
-			height: 10px;
-		}
+        /* Tool active state */
+        .tool-btn.active {
+            background-color: #e0e7ff;
+            color: #4f46e5;
+            border-color: #c7d2fe;
+        }
+        .dark .tool-btn.active {
+            background-color: #3730a3;
+            color: #e0e7ff;
+            border-color: #4f46e5;
+        }
 
-		::-webkit-scrollbar-track {
-			background: transparent;
-		}
+        /* Color picker custom style */
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
 
-		::-webkit-scrollbar-thumb {
-			background: rgba(255, 255, 255, 0.2);
-			border-radius: 4px;
-		}
+        /* Fix dark mode select options */
+        .dark select option {
+            background-color: #262626; /* neutral-800 */
+            color: #f3f4f6; /* gray-100 */
+        }
 
-		::-webkit-scrollbar-thumb:hover {
-			background: rgba(255, 255, 255, 0.4);
-		}
+        /* Drawing canvas touch action */
+        #draw-layer { touch-action: none; }
 
-		/* Style cho công cụ màu (Color picker) */
-		input[type="color"]::-webkit-color-swatch-wrapper {
-			padding: 0;
-		}
-
-		input[type="color"]::-webkit-color-swatch {
-			border: none;
-			border-radius: 4px;
-		}
-	</style>
+        @media (max-width: 640px) {
+            .code-grid-wrapper > * { font-size: 13px; padding: 1rem !important; min-height: 160px; }
+            #export-container { padding: 24px !important; }
+            #mac-window { width: 100% !important; min-width: 100%; border-radius: 8px; }
+            .resize-handle { display: none; }
+        }
+    </style>
 </head>
-<body class="flex flex-col md:flex-row h-screen overflow-hidden">
+<body class="bg-gray-50 text-gray-900 dark:bg-neutral-950 dark:text-gray-100 flex flex-col h-screen transition-colors duration-200">
 
-<!-- Bảng điều khiển (Sidebar) -->
-<aside class="w-full md:w-80 bg-gray-900 border-r border-gray-800 p-6 flex flex-col gap-6 overflow-y-auto shrink-0 z-10 shadow-xl custom-scrollbar">
-	<div>
-		<h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-1">Ảnh Code</h1>
-		<p class="text-xs text-gray-400">Tạo hình ảnh source code tuyệt đẹp</p>
-	</div>
+    <!-- TOP NAVIGATION BAR -->
+    <header class="flex-none bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-800 shadow-sm z-50 relative">
+        <div class="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 max-w-screen-2xl mx-auto w-full">
+            
+            <!-- Left: Brand & Mobile Menu Toggle -->
+            <div class="flex items-center gap-2 shrink-0">
+                <button id="mobile-menu-btn" class="sm:hidden p-2 -ml-1 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 rounded-lg transition-colors" title="Menu">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <div class="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500 select-none" data-i18n="app_title">
+                    CodePic
+                </div>
+            </div>
+            
+            <div class="h-6 w-px bg-gray-200 dark:bg-neutral-700 hidden sm:block mx-4"></div>
 
-	<!-- Khung Điều Khiển -->
-	<div class="flex flex-col gap-5">
+            <!-- Settings Group (Collapsible on Mobile) -->
+            <div id="settings-group" class="hidden sm:flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2 absolute sm:relative top-full left-0 w-full sm:w-auto bg-white dark:bg-neutral-900 sm:bg-transparent p-4 sm:p-0 border-b border-gray-200 dark:border-neutral-800 sm:border-0 shadow-xl sm:shadow-none z-50 overflow-x-auto no-scrollbar">
+                <select id="lang-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer w-full sm:w-36 shrink-0" title="Ngôn ngữ Lập trình" data-i18n-title="lang_select_title">
+                    <option value="javascript">JavaScript</option>
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                    <option value="python">Python</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                    <option value="csharp">C#</option>
+                    <option value="php">PHP</option>
+                    <option value="ruby">Ruby</option>
+                    <option value="go">Go</option>
+                    <option value="rust">Rust</option>
+                    <option value="sql">SQL</option>
+                    <option value="json">JSON</option>
+                    <option value="typescript">TypeScript</option>
+                    <option value="markdown">Markdown</option>
+                    <option value="xml">XML</option>
+                </select>
 
-		<!-- ĐÁNH DẤU (VẼ) -->
-		<div>
-			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Đánh dấu (Vẽ lên Code)</label>
-			<!-- Đổi grid-cols-5 thành grid-cols-6 để thêm nút Text -->
-			<div class="grid grid-cols-6 gap-2 mb-2">
-				<!-- Nút Gõ Code -->
-				<button class="tool-btn active flex items-center justify-center p-2 rounded-md bg-blue-600 border border-blue-500 text-white transition"
-				        data-tool="edit" title="Soạn thảo Code (Mặc định)">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<path d="M4 11a9 9 0 0 1 9 9"/>
-						<path d="M4 4a16 16 0 0 1 16 16"/>
-						<circle cx="5" cy="19" r="1"/>
-					</svg>
-				</button>
-				<!-- Viết chữ -->
-				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700"
-				        data-tool="text" title="Viết chữ (Text)">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<polyline points="4 7 4 4 20 4 20 7"/>
-						<line x1="12" y1="4" x2="12" y2="20"/>
-						<line x1="8" y1="20" x2="16" y2="20"/>
-					</svg>
-				</button>
-				<!-- Hình Chữ Nhật -->
-				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700"
-				        data-tool="rect" title="Vẽ hình chữ nhật">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-					</svg>
-				</button>
-				<!-- Hình Tròn -->
-				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700"
-				        data-tool="circle" title="Vẽ hình elip/tròn">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<circle cx="12" cy="12" r="10"/>
-					</svg>
-				</button>
-				<!-- Mũi Tên -->
-				<button class="tool-btn flex items-center justify-center p-2 rounded-md bg-gray-800 border border-gray-700 text-gray-400 hover:text-white transition hover:bg-gray-700"
-				        data-tool="arrow" title="Vẽ mũi tên">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<line x1="5" y1="19" x2="19" y2="5"/>
-						<polyline points="10 5 19 5 19 14"/>
-					</svg>
-				</button>
-				<!-- Chọn màu vẽ -->
-				<div class="rounded-md overflow-hidden border border-gray-700" title="Chọn màu vẽ">
-					<input type="color" id="draw-color" value="#ff3366"
-					       class="w-full h-full p-0 border-0 cursor-pointer bg-gray-800 block">
-				</div>
-			</div>
-			<!-- Cụm nút Undo / Redo / Xóa -->
-			<div class="grid grid-cols-3 gap-2 mt-2">
-				<button id="undo-btn"
-				        class="w-full py-1.5 px-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-xs text-gray-400 rounded-md transition duration-200 flex justify-center items-center gap-1 opacity-50 cursor-not-allowed"
-				        title="Hoàn tác (Ctrl+Z)">
-					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<path d="M3 7v6h6"/>
-						<path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
-					</svg>
-					Undo
-				</button>
-				<button id="redo-btn"
-				        class="w-full py-1.5 px-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-xs text-gray-400 rounded-md transition duration-200 flex justify-center items-center gap-1 opacity-50 cursor-not-allowed"
-				        title="Làm lại (Ctrl+Y / Ctrl+Shift+Z)">
-					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<path d="M21 7v6h-6"/>
-						<path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/>
-					</svg>
-					Redo
-				</button>
-				<button id="clear-draw-btn"
-				        class="w-full py-1.5 px-2 bg-gray-800 hover:bg-red-900/50 hover:text-red-300 border border-gray-700 text-xs text-gray-400 rounded-md transition duration-200 flex justify-center items-center gap-1"
-				        title="Xóa tất cả nét vẽ">
-					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-					     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-						<polyline points="3 6 5 6 21 6"/>
-						<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-					</svg>
-					Xóa
-				</button>
-			</div>
-		</div>
+                <select id="theme-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer w-full sm:w-40 shrink-0" title="Theme Code" data-i18n-title="theme_select_title">
+                    <option value="atom-one-dark">Atom One Dark</option>
+                    <option value="monokai">Monokai</option>
+                    <option value="base16/dracula">Dracula</option>
+                    <option value="github-dark">GitHub Dark</option>
+                    <option value="nord">Nord</option>
+                    <option value="vs2015">VS 2015</option>
+                </select>
 
-		<hr class="border-gray-800">
+                <select id="bg-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none cursor-pointer w-full sm:w-44 shrink-0" title="Màu nền" data-i18n-title="bg_select_title">
+                    <option value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)" data-i18n="bg_purple">Tím Hoàng Hôn</option>
+                    <option value="linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)" data-i18n="bg_blue">Đại Dương Xanh</option>
+                    <option value="linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)" data-i18n="bg_candy">Kẹo Ngọt</option>
+                    <option value="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)" data-i18n="bg_green">Xanh Lá Tươi</option>
+                    <option value="#282c34" data-i18n="bg_solid">Xám Đậm (Solid)</option>
+                    <option value="transparent" data-i18n="bg_transparent">Trong suốt</option>
+                </select>
 
-		<!-- Chọn Ngôn Ngữ -->
-		<div>
-			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Ngôn ngữ</label>
-			<select id="lang-select"
-			        class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
-				<option value="javascript">JavaScript</option>
-				<option value="html">HTML</option>
-				<option value="css">CSS</option>
-				<option value="python">Python</option>
-				<option value="java">Java</option>
-				<option value="cpp">C++</option>
-				<option value="json">JSON</option>
-				<option value="typescript">TypeScript</option>
-				<option value="php">PHP</option>
-				<option value="rust">Rust</option>
-			</select>
-		</div>
+                <div class="flex items-center justify-between sm:justify-start gap-2 bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 shrink-0">
+                    <span class="text-xs text-gray-500 dark:text-gray-400" data-i18n="padding_label">Padding</span>
+                    <input type="range" id="padding-slider" min="16" max="128" value="64" class="w-full sm:w-24 h-1 bg-gray-300 dark:bg-neutral-600 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
 
-		<!-- Chọn Theme -->
-		<div>
-			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Giao diện (Theme)</label>
-			<select id="theme-select"
-			        class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
-				<option value="atom-one-dark">Atom One Dark</option>
-				<option value="monokai">Monokai</option>
-				<option value="dracula">Dracula</option>
-				<option value="github-dark">GitHub Dark</option>
-				<option value="nord">Nord</option>
-				<option value="night-owl">Night Owl</option>
-				<option value="vs2015">VS 2015</option>
-			</select>
-		</div>
+            <!-- Right: Actions -->
+            <div class="flex items-center gap-1 sm:gap-2 shrink-0 ml-auto sm:ml-4">
+                <!-- UI Language Toggle -->
+                <select id="ui-lang-select" class="bg-transparent text-gray-900 dark:text-gray-100 text-sm font-semibold outline-none cursor-pointer hover:text-gray-600 dark:hover:text-gray-300 transition-colors mr-1" title="Ngôn ngữ giao diện" data-i18n-title="ui_lang_title">
+                    <option value="vi">VI</option>
+                    <option value="en">EN</option>
+                </select>
 
-		<!-- Chọn Hình nền -->
-		<div>
-			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Hình nền</label>
-			<select id="bg-select"
-			        class="w-full bg-gray-800 text-sm border border-gray-700 rounded-md p-2 outline-none focus:border-blue-500 transition">
-				<option value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">Tím Hoàng Hôn</option>
-				<option value="linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)">Đại Dương Xanh</option>
-				<option value="linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)">Kẹo Ngọt</option>
-				<option value="linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)">Cam Mộng Mơ</option>
-				<option value="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)">Xanh Lá Tươi</option>
-				<option value="linear-gradient(135deg, #fa709a 0%, #fee140 100%)">Mặt Trời</option>
-				<option value="#2a2a2a">Xám Đậm (Không Gradient)</option>
-				<option value="#transparent">Trong suốt</option>
-			</select>
-		</div>
+                <button id="theme-toggle" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition-colors" title="Bật/Tắt Chế Độ Tối" data-i18n-title="theme_toggle_title">
+                    <!-- Sun Icon (Light Mode) -->
+                    <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <!-- Moon Icon (Dark Mode) -->
+                    <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
 
-		<!-- Điều chỉnh Padding -->
-		<div>
-			<label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Khoảng cách (Padding)</label>
-			<input type="range" id="padding-slider" min="16" max="128" value="64"
-			       class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
-			<div class="text-right text-xs text-gray-500 mt-1" id="padding-value">64px</div>
-		</div>
+                <button id="format-btn" class="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
+                    <span data-i18n="btn_format">Format</span>
+                </button>
 
-		<!-- Nút Format Code -->
-		<button id="format-btn"
-		        class="w-full py-2 px-4 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 font-medium rounded-md transition duration-200 flex justify-center items-center gap-2">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-			     stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
-			</svg>
-			Format Code
-		</button>
+                <button id="export-btn" class="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-all">
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span data-i18n="btn_export" class="hidden sm:inline whitespace-nowrap">Lưu ảnh</span>
+                </button>
+            </div>
+        </div>
+    </header>
 
-		<hr class="border-gray-800">
+    <!-- MAIN WORKSPACE -->
+    <main class="flex-1 relative overflow-auto bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNlN2U1ZTQiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiM0MDRhNTIiIGZpbGwtb3BhY2l0eT0iMC4yIi8+PC9zdmc+')] pb-32">
+        
+        <!-- Canvas wrapper -->
+        <div class="min-h-full flex items-center justify-center p-4 sm:p-8">
+            <div id="export-container" class="relative rounded-lg shadow-2xl flex items-center justify-center shrink-0">
+                
+                <!-- Mac Window UI -->
+                <div id="mac-window" class="rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] w-[800px] min-w-[320px] max-w-full border border-white/10 flex flex-col relative group" style="background-color: #282c34;">
+                    
+                    <!-- SVG Draw Layer -->
+                    <svg id="draw-layer" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 w-full h-full z-20 pointer-events-none rounded-xl" style="overflow: visible;"></svg>
 
-		<!-- Nút Tải Xuống -->
-		<button id="export-btn"
-		        class="w-full py-3 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-md shadow-lg transition-transform transform active:scale-95 flex justify-center items-center gap-2">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-			     stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-				      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-			</svg>
-			Lưu Ảnh PNG
-		</button>
+                    <!-- Resize Handles -->
+                    <div class="resize-handle left absolute left-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-l-xl z-30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="resize-handle right absolute right-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-r-xl z-30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-		<div id="loading-msg" class="text-center text-sm text-green-400 hidden animate-pulse">Đang tạo ảnh...</div>
-	</div>
-</aside>
+                    <!-- Window Header -->
+                    <div class="h-12 flex items-center px-4 relative shrink-0 z-10 border-b border-white/5">
+                        <div class="flex gap-2 absolute left-4">
+                            <div class="w-3 h-3 rounded-full bg-[#ff5f56] shadow-sm"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#ffbd2e] shadow-sm"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#27c93f] shadow-sm"></div>
+                        </div>
+                        <div class="flex-1 flex justify-center px-20">
+                            <span id="file-title" contenteditable="true" spellcheck="false" class="text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition hover:bg-white/5 rounded px-3 pt-1 pb-1.5 min-w-[50px] max-w-[250px] whitespace-nowrap overflow-hidden text-ellipsis relative block cursor-text leading-normal">untitled.js</span>
+                        </div>
+                    </div>
 
-<!-- Khu vực Xem trước (Main Canvas) -->
-<main class="flex-1 bg-black relative flex items-start justify-center overflow-auto p-4 md:p-10 custom-scrollbar"
-      id="main-area">
-
-	<div id="export-container"
-	     class="relative transition-all duration-300 rounded-lg flex items-center justify-center shrink-0"
-	     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 64px;">
-
-		<!-- Cửa sổ giả lập hệ điều hành Mac -->
-		<div id="mac-window"
-		     class="rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] w-[800px] min-w-[350px] border border-white/10 flex flex-col relative group"
-		     style="background-color: #282c34;">
-
-			<!-- Lớp phủ SVG để vẽ (Draw Layer) -->
-			<svg id="draw-layer" xmlns="http://www.w3.org/2000/svg"
-			     class="absolute inset-0 w-full h-full z-20 pointer-events-none rounded-xl"
-			     style="overflow: visible;"></svg>
-
-			<!-- Thanh kéo để thay đổi kích thước -->
-			<div class="resize-handle left absolute left-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-l-xl z-30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-			<div class="resize-handle right absolute right-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-r-xl z-30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-			<!-- Thanh tiêu đề -->
-			<div class="h-12 flex items-center px-4 relative shrink-0 z-10">
-				<div class="flex gap-2 absolute left-4">
-					<div class="w-3 h-3 rounded-full bg-[#ff5f56] shadow-sm"></div>
-					<div class="w-3 h-3 rounded-full bg-[#ffbd2e] shadow-sm"></div>
-					<div class="w-3 h-3 rounded-full bg-[#27c93f] shadow-sm"></div>
-				</div>
-				<!-- Tên tệp -->
-				<div class="flex-1 flex justify-center px-20">
-					<span id="file-title" contenteditable="true" spellcheck="false"
-					      class="text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition hover:bg-white/5 rounded px-3 py-1 min-w-[50px] max-w-[250px] whitespace-nowrap overflow-hidden relative leading-normal block cursor-text">untitled.js</span>
-				</div>
-			</div>
-
-			<!-- Khu vực chứa Code Editor -->
-			<div class="relative w-full text-left code-grid-wrapper z-0">
-                    <pre class="m-0"><code id="highlight-display" class="language-javascript block">const greeting = "Xin chào các nhà phát triển!";
+                    <!-- Code Area -->
+                    <div class="relative w-full text-left code-grid-wrapper z-0">
+                        <pre class="m-0"><code id="highlight-display" class="language-javascript block">const greeting = "Xin chào các nhà phát triển!";
 
 function createBeautifulCode() {
-    // 1. Chỉnh sửa đoạn code này
-    // 2. Click chọn biểu tượng Vẽ bên trái
-    // 3. Khoanh tròn, kẻ mũi tên đánh dấu thoải mái
+    // 1. Gõ code của bạn vào đây
+    // 2. Sử dụng thanh công cụ bên dưới để vẽ
+    // 3. Đổi giao diện, màu nền ở trên cùng
     return {
         success: true,
         message: greeting
     };
 }</code></pre>
-				<textarea id="code-editor" spellcheck="false">const greeting = "Xin chào các nhà phát triển!";
+                        <textarea id="code-editor" spellcheck="false">const greeting = "Xin chào các nhà phát triển!";
 
 function createBeautifulCode() {
-    // 1. Chỉnh sửa đoạn code này
-    // 2. Click chọn biểu tượng Vẽ bên trái
-    // 3. Khoanh tròn, kẻ mũi tên đánh dấu thoải mái
+    // 1. Gõ code của bạn vào đây
+    // 2. Sử dụng thanh công cụ bên dưới để vẽ
+    // 3. Đổi giao diện, màu nền ở trên cùng
     return {
         success: true,
         message: greeting
     };
 }</textarea>
-			</div>
-		</div>
-	</div>
-</main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-<script>
-    // DI CHUYỂN KHAI BÁO LÊN TRÊN ĐẦU ĐỂ TRÁNH LỖI ReferenceError
-    const editor = document.getElementById('code-editor');
-    const display = document.getElementById('highlight-display');
-    const langSelect = document.getElementById('lang-select');
-    const themeSelect = document.getElementById('theme-select');
-    const bgSelect = document.getElementById('bg-select');
-    const paddingSlider = document.getElementById('padding-slider');
-    const macWindow = document.getElementById('mac-window');
-    const exportContainer = document.getElementById('export-container');
-    const hljsThemeLink = document.getElementById('hljs-theme');
-    const drawLayer = document.getElementById('draw-layer');
-    const toolBtns = document.querySelectorAll('.tool-btn');
-    const colorPicker = document.getElementById('draw-color');
+    <!-- FLOATING TOOLBAR -->
+    <div class="fixed bottom-4 sm:bottom-6 left-2 right-2 sm:left-1/2 sm:-translate-x-1/2 sm:w-max z-40 pb-[env(safe-area-inset-bottom)] pointer-events-none flex justify-center">
+        <div class="flex items-center gap-1.5 p-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-200 dark:border-neutral-700 pointer-events-auto overflow-x-auto no-scrollbar w-full sm:w-auto">
+            
+            <!-- Drawing Tools -->
+            <div class="flex items-center gap-1 shrink-0">
+                <button class="tool-btn active flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition" data-tool="edit" title="Chỉnh sửa Code" data-i18n-title="tool_edit_title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                </button>
+                <div class="w-px h-6 bg-gray-200 dark:bg-neutral-700 mx-1 shrink-0"></div>
+                <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition" data-tool="text" title="Chữ" data-i18n-title="tool_text_title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7V4h16v3M12 4v16m-4 0h8"></path></svg>
+                </button>
+                <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition" data-tool="rect" title="Hình vuông" data-i18n-title="tool_rect_title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect></svg>
+                </button>
+                <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition" data-tool="circle" title="Hình tròn" data-i18n-title="tool_circle_title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"></circle></svg>
+                </button>
+                <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition" data-tool="arrow" title="Mũi tên" data-i18n-title="tool_arrow_title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
 
-    // --- CODE EDITOR LOGIC ---
-    hljs.highlightElement(display);
-    syncThemeBackground();
+            <div class="w-px h-6 bg-gray-200 dark:bg-neutral-700 mx-1 shrink-0"></div>
 
-    // --- HISTORY (UNDO / REDO) LOGIC ---
-    let history = [];
-    let historyIndex = -1;
-    let isRestoring = false;
-    let saveTimeout;
+            <!-- Color Picker -->
+            <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-200 dark:border-neutral-700 shrink-0 relative cursor-pointer" title="Chọn màu vẽ" data-i18n-title="tool_color_title">
+                <input type="color" id="draw-color" value="#ef4444" class="absolute -inset-2 w-[200%] h-[200%] cursor-pointer">
+            </div>
 
-    function updateUndoRedoButtons() {
-        const undoBtn = document.getElementById('undo-btn');
-        const redoBtn = document.getElementById('redo-btn');
+            <div class="w-px h-6 bg-gray-200 dark:bg-neutral-700 mx-1 shrink-0"></div>
 
-        if (historyIndex > 0) {
-            undoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        } else {
-            undoBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        }
+            <!-- History Controls -->
+            <div class="flex items-center gap-1 shrink-0">
+                <button id="undo-btn" class="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition opacity-50 cursor-not-allowed" title="Hoàn tác (Undo)" data-i18n-title="undo_title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                </button>
+                <button id="redo-btn" class="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition opacity-50 cursor-not-allowed" title="Làm lại (Redo)" data-i18n-title="redo_title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path></svg>
+                </button>
+                <button id="clear-draw-btn" class="p-2.5 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition" title="Xóa tất cả hình vẽ" data-i18n-title="clear_draw_title">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
 
-        if (historyIndex < history.length - 1) {
-            redoBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        } else {
-            redoBtn.classList.add('opacity-50', 'cursor-not-allowed');
-        }
-    }
-
-    function saveState(delay = 0) {
-        if (isRestoring) return;
-        clearTimeout(saveTimeout);
-
-        const executeSave = () => {
-            const currentState = {
-                code: editor.value,
-                svg: drawLayer.innerHTML
-            };
-
-            if (historyIndex >= 0) {
-                const lastState = history[historyIndex];
-                if (lastState.code === currentState.code && lastState.svg === currentState.svg) return;
+    <script>
+        // --- MULTI-LANGUAGE (i18n) DICTIONARY ---
+        const translations = {
+            vi: {
+                app_title: "CodePic",
+                ui_lang_title: "Ngôn ngữ giao diện",
+                lang_select_title: "Ngôn ngữ Lập trình",
+                theme_select_title: "Theme Code",
+                bg_select_title: "Màu nền",
+                padding_label: "Padding",
+                btn_format: "Format",
+                btn_export: "Lưu ảnh",
+                tool_edit_title: "Chỉnh sửa Code",
+                tool_text_title: "Chữ",
+                tool_rect_title: "Hình vuông",
+                tool_circle_title: "Hình tròn",
+                tool_arrow_title: "Mũi tên",
+                tool_color_title: "Chọn màu vẽ",
+                undo_title: "Hoàn tác (Undo)",
+                redo_title: "Làm lại (Redo)",
+                clear_draw_title: "Xóa tất cả hình vẽ",
+                theme_toggle_title: "Bật/Tắt Chế Độ Tối",
+                placeholder_temp_text: "Gõ chữ & Enter",
+                msg_exporting: "Đang lưu...",
+                err_format: "Có lỗi cú pháp khi format code.",
+                err_format_unsupported: "Ngôn ngữ này chưa được hỗ trợ format tự động.",
+                err_export: "Có lỗi xảy ra khi lưu ảnh.",
+                bg_purple: "Tím Hoàng Hôn",
+                bg_blue: "Đại Dương Xanh",
+                bg_candy: "Kẹo Ngọt",
+                bg_green: "Xanh Lá Tươi",
+                bg_solid: "Xám Đậm (Solid)",
+                bg_transparent: "Trong suốt"
+            },
+            en: {
+                app_title: "CodePic",
+                ui_lang_title: "UI Language",
+                lang_select_title: "Programming Language",
+                theme_select_title: "Code Theme",
+                bg_select_title: "Background",
+                padding_label: "Padding",
+                btn_format: "Format",
+                btn_export: "Export",
+                tool_edit_title: "Code Editor",
+                tool_text_title: "Text",
+                tool_rect_title: "Rectangle",
+                tool_circle_title: "Circle",
+                tool_arrow_title: "Arrow",
+                tool_color_title: "Choose Color",
+                undo_title: "Undo",
+                redo_title: "Redo",
+                clear_draw_title: "Clear all drawings",
+                theme_toggle_title: "Toggle Light/Dark Mode",
+                placeholder_temp_text: "Type & press Enter",
+                msg_exporting: "Exporting...",
+                err_format: "Syntax error while formatting code.",
+                err_format_unsupported: "This language is not supported for automatic formatting.",
+                err_export: "Error while exporting image.",
+                bg_purple: "Purple Sunset",
+                bg_blue: "Blue Ocean",
+                bg_candy: "Sweet Candy",
+                bg_green: "Fresh Green",
+                bg_solid: "Dark Gray (Solid)",
+                bg_transparent: "Transparent"
             }
-
-            if (historyIndex < history.length - 1) {
-                history = history.slice(0, historyIndex + 1);
-            }
-
-            history.push(currentState);
-            if (history.length > 50) history.shift();
-            else historyIndex++;
-
-            updateUndoRedoButtons();
         };
 
-        if (delay > 0) {
-            saveTimeout = setTimeout(executeSave, delay);
+        let currentUILang = 'vi';
+        let tempTextPlaceholder = translations['vi'].placeholder_temp_text;
+
+        function applyTranslations(lang) {
+            currentUILang = lang;
+            document.documentElement.lang = lang;
+            const dict = translations[lang];
+
+            // Update text contents
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.textContent = dict[key];
+            });
+
+            // Update title attributes (tooltips)
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                const key = el.getAttribute('data-i18n-title');
+                if (dict[key]) el.title = dict[key];
+            });
+
+            tempTextPlaceholder = dict.placeholder_temp_text || "Type & Enter";
+            localStorage.setItem('uiLang', lang);
+        }
+
+        // Initialize UI Language
+        const uiLangSelect = document.getElementById('ui-lang-select');
+        const savedLang = localStorage.getItem('uiLang');
+        const browserLang = navigator.language.startsWith('en') ? 'en' : 'vi';
+        const initLang = savedLang || browserLang;
+        
+        uiLangSelect.value = initLang;
+        applyTranslations(initLang);
+
+        uiLangSelect.addEventListener('change', (e) => {
+            applyTranslations(e.target.value);
+        });
+
+        // --- Mobile Menu Toggle ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const settingsGroup = document.getElementById('settings-group');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            settingsGroup.classList.toggle('hidden');
+            settingsGroup.classList.toggle('flex');
+        });
+
+        // Đóng menu mobile khi click ra ngoài
+        document.addEventListener('click', (e) => {
+            if (!settingsGroup.contains(e.target) && !mobileMenuBtn.contains(e.target) && !settingsGroup.classList.contains('hidden') && window.innerWidth < 640) {
+                settingsGroup.classList.add('hidden');
+                settingsGroup.classList.remove('flex');
+            }
+        });
+
+        // --- DOM Elements ---
+        const editor = document.getElementById('code-editor');
+        const display = document.getElementById('highlight-display');
+        const langSelect = document.getElementById('lang-select');
+        const themeSelect = document.getElementById('theme-select');
+        const bgSelect = document.getElementById('bg-select');
+        const paddingSlider = document.getElementById('padding-slider');
+        const macWindow = document.getElementById('mac-window');
+        const exportContainer = document.getElementById('export-container');
+        const hljsThemeLink = document.getElementById('hljs-theme');
+        const drawLayer = document.getElementById('draw-layer');
+        const toolBtns = document.querySelectorAll('.tool-btn');
+        const colorPicker = document.getElementById('draw-color');
+        
+        // --- Dark/Light Mode Logic ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
         } else {
-            executeSave();
+            htmlElement.classList.remove('dark');
         }
-    }
 
-    function undo() {
-        if (historyIndex > 0) {
-            historyIndex--;
-            restoreState(history[historyIndex]);
-        }
-    }
+        themeToggle.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            localStorage.theme = htmlElement.classList.contains('dark') ? 'dark' : 'light';
+            syncThemeBackground(); // Ensure caret color syncs correctly
+        });
 
-    function redo() {
-        if (historyIndex < history.length - 1) {
-            historyIndex++;
-            restoreState(history[historyIndex]);
-        }
-    }
-
-    function restoreState(state) {
-        isRestoring = true;
-        editor.value = state.code;
-        drawLayer.innerHTML = state.svg;
-        updateCode();
-        updateUndoRedoButtons();
-        isRestoring = false;
-    }
-
-    document.getElementById('undo-btn').addEventListener('click', undo);
-    document.getElementById('redo-btn').addEventListener('click', redo);
-
-    document.addEventListener('keydown', (e) => {
-        // Không can thiệp nếu đang nhập text vào Title hoặc Input Vẽ
-        if (e.target.id === 'file-title' || e.target.id === 'temp-text-input') return;
-
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
-            e.preventDefault();
-            if (e.shiftKey) redo();
-            else undo();
-        } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
-            e.preventDefault();
-            redo();
-        }
-    });
-
-    // Lưu trạng thái đầu tiên khi vừa tải trang
-    saveState();
-
-    function updateCode() {
-        display.textContent = editor.value || " ";
-        delete display.dataset.highlighted;
-        display.className = `language-${langSelect.value} block`;
+        // Initialize Highlight
         hljs.highlightElement(display);
         syncThemeBackground();
-    }
 
-    editor.addEventListener('input', () => {
-        updateCode();
-        saveState(500); // Debounce: đợi người dùng ngừng gõ 0.5s rồi mới lưu
-    });
+        // --- History Management ---
+        let history = [];
+        let historyIndex = -1;
+        let isRestoring = false;
+        let saveTimeout;
 
-    editor.addEventListener('paste', () => {
-        setTimeout(() => {
-            updateCode();
-            saveState(); // Lưu ngay sau khi Paste
-        }, 10)
-    });
-
-    editor.addEventListener('keydown', function (e) {
-        if (e.key === 'Tab') {
-            e.preventDefault();
-            const start = this.selectionStart;
-            const end = this.selectionEnd;
-            this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
-            this.selectionStart = this.selectionEnd = start + 4;
-            updateCode();
-            saveState();
-        }
-    });
-
-    langSelect.addEventListener('change', updateCode);
-    themeSelect.addEventListener('change', () => {
-        const theme = themeSelect.value;
-        hljsThemeLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/${theme}.min.css`;
-        setTimeout(syncThemeBackground, 150);
-    });
-
-    function syncThemeBackground() {
-        const computedStyle = window.getComputedStyle(display);
-        let bgColor = computedStyle.backgroundColor;
-        if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') {
-            bgColor = '#1e1e1e';
-        }
-        macWindow.style.backgroundColor = bgColor;
-        const rgb = bgColor.match(/\d+/g);
-        if (rgb) {
-            const brightness = Math.round(((parseInt(rgb[0]) * 299) + (parseInt(rgb[1]) * 587) + (parseInt(rgb[2]) * 114)) / 1000);
-            editor.style.caretColor = (brightness > 125) ? '#000000' : '#ffffff';
-        }
-    }
-
-    bgSelect.addEventListener('change', () => exportContainer.style.background = bgSelect.value);
-    paddingSlider.addEventListener('input', () => {
-        const val = paddingSlider.value;
-        document.getElementById('padding-value').innerText = `${val}px`;
-        exportContainer.style.padding = `${val}px`;
-    });
-
-    document.getElementById('format-btn').addEventListener('click', () => {
-        let code = editor.value;
-        const lang = langSelect.value;
-        try {
-            if (['javascript', 'json', 'typescript', 'java', 'cpp', 'php'].includes(lang)) {
-                code = js_beautify(code, {indent_size: 4, preserve_newlines: true});
-            } else if (lang === 'html') {
-                code = html_beautify(code, {indent_size: 4});
-            } else if (lang === 'css') {
-                code = css_beautify(code, {indent_size: 4});
-            }
-            editor.value = code;
-            updateCode();
-            saveState(); // Lưu lịch sử sau khi Format
-        } catch (err) {
-            alert("Ngôn ngữ này chưa được hỗ trợ format tự động hoặc code đang bị lỗi cú pháp.");
-        }
-    });
-
-    // --- RESIZE WINDOW LOGIC ---
-    const resizeHandles = document.querySelectorAll('.resize-handle');
-    let isResizing = false;
-    let startX = 0;
-    let startWidth = 0;
-
-    resizeHandles.forEach(handle => {
-        handle.addEventListener('mousedown', (e) => {
-            isResizing = true;
-            startX = e.clientX;
-            macWindow.style.transition = 'none';
-            e.preventDefault();
-        });
-    });
-    document.addEventListener('mousemove', (e) => {
-        if (!isResizing) return;
-        const rect = macWindow.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const newHalfWidth = Math.abs(e.clientX - centerX);
-        let newWidth = Math.max(350, Math.min(newHalfWidth * 2, 1400));
-        macWindow.style.width = `${newWidth}px`;
-    });
-    document.addEventListener('mouseup', () => {
-        if (isResizing) {
-            isResizing = false;
-            macWindow.style.transition = '';
-        }
-    });
-
-    // --- FILE TITLE LOGIC ---
-    const fileTitle = document.getElementById('file-title');
-    fileTitle.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            fileTitle.blur();
-        }
-    });
-    fileTitle.addEventListener('paste', (e) => {
-        e.preventDefault();
-        const text = (e.originalEvent || e).clipboardData.getData('text/plain');
-        document.execCommand('insertText', false, text);
-    });
-
-    // --- DRAWING LAYER LOGIC ---
-    let currentTool = 'edit';
-    let isDrawing = false;
-    let currentSvgShape = null;
-    let drawStartX = 0, drawStartY = 0;
-
-    // Hàm kích hoạt công cụ vẽ
-    function activateTool(toolName) {
-        currentTool = toolName;
-
-        // Xóa active tất cả các nút
-        toolBtns.forEach(b => {
-            b.classList.remove('bg-blue-600', 'border-blue-500', 'text-white');
-            b.classList.add('bg-gray-800', 'border-gray-700', 'text-gray-400');
-        });
-
-        // Set active cho nút được chọn
-        const activeBtn = document.querySelector(`.tool-btn[data-tool="${toolName}"]`);
-        if (activeBtn) {
-            activeBtn.classList.remove('bg-gray-800', 'border-gray-700', 'text-gray-400');
-            activeBtn.classList.add('bg-blue-600', 'border-blue-500', 'text-white');
+        function updateUndoRedoButtons() {
+            const undoBtn = document.getElementById('undo-btn');
+            const redoBtn = document.getElementById('redo-btn');
+            
+            undoBtn.classList.toggle('opacity-50', historyIndex <= 0);
+            undoBtn.classList.toggle('cursor-not-allowed', historyIndex <= 0);
+            
+            redoBtn.classList.toggle('opacity-50', historyIndex >= history.length - 1);
+            redoBtn.classList.toggle('cursor-not-allowed', historyIndex >= history.length - 1);
         }
 
-        if (currentTool === 'edit') {
-            // Tắt layer vẽ để gõ code bình thường
-            drawLayer.style.pointerEvents = 'none';
-            drawLayer.style.cursor = 'default';
-        } else if (currentTool === 'text') {
-            drawLayer.style.pointerEvents = 'auto';
-            drawLayer.style.cursor = 'text';
-        } else {
-            // Bật layer vẽ, chặn click vào code
-            drawLayer.style.pointerEvents = 'auto';
-            drawLayer.style.cursor = 'crosshair';
-        }
-    }
-
-    // Chọn công cụ (Có hỗ trợ bật/tắt Toggle)
-    toolBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const clickedTool = btn.dataset.tool;
-
-            // Nếu click lại vào công cụ đang vẽ (và không phải là nút edit), thì tắt nó về edit
-            if (clickedTool === currentTool && clickedTool !== 'edit') {
-                activateTool('edit');
-            } else {
-                activateTool(clickedTool);
-            }
-        });
-    });
-
-    // Xóa hình vẽ
-    document.getElementById('clear-draw-btn').addEventListener('click', () => {
-        if (drawLayer.innerHTML !== '') {
-            drawLayer.innerHTML = '';
-            saveState();
-        }
-    });
-
-    // Bắt đầu vẽ
-    drawLayer.addEventListener('mousedown', (e) => {
-        if (currentTool === 'edit') return;
-
-        e.preventDefault(); // RẤT QUAN TRỌNG: Tránh trình duyệt cướp focus khiến input bị ẩn
-
-        const rect = drawLayer.getBoundingClientRect();
-        drawStartX = e.clientX - rect.left;
-        drawStartY = e.clientY - rect.top;
-
-        const color = colorPicker.value;
-        const strokeWidth = "3";
-        const svgNS = 'http://www.w3.org/2000/svg';
-
-        // Nếu là công cụ viết chữ
-        if (currentTool === 'text') {
-            // Xóa input cũ nếu người dùng quên chưa enter mà click chỗ khác
-            const oldInput = document.getElementById('temp-text-input');
-            if (oldInput) {
-                oldInput.blur();
-            }
-
-            // Tạo một input tạm thời để người dùng gõ
-            const input = document.createElement('input');
-            input.id = 'temp-text-input';
-            input.type = 'text';
-            input.placeholder = "Gõ chữ & nhấn Enter";
-            input.style.position = 'absolute';
-            input.style.left = `${drawStartX}px`;
-            input.style.top = `${drawStartY - 10}px`; // Dịch lên một chút để chữ ngay đầu chuột
-            input.style.color = color;
-            input.style.background = 'transparent';
-            input.style.border = '1px dashed rgba(255, 255, 255, 0.4)';
-            input.style.outline = 'none';
-            input.style.fontFamily = "'JetBrains Mono', monospace";
-            input.style.fontSize = "15px";
-            input.style.zIndex = "50";
-            input.style.minWidth = "180px";
-
-            // Đưa input vào khung giao diện
-            drawLayer.parentElement.appendChild(input);
-
-            // Delay cực nhỏ để đảm bảo input chiếm được focus
-            setTimeout(() => input.focus(), 10);
-
-            // Tự động kéo dài input khi gõ
-            input.addEventListener('input', function () {
-                this.style.width = ((this.value.length + 1) * 9) + 'px';
-            });
-
-            let isFinalized = false; // Biến cờ tránh lưu đúp
-
-            // Khi gõ xong (Enter hoặc click ra ngoài) -> Chuyển thành text SVG
-            const finalizeText = () => {
-                if (isFinalized) return;
-                isFinalized = true;
-
-                if (input.value.trim() !== '') {
-                    const textNode = document.createElementNS(svgNS, 'text');
-                    textNode.setAttribute('x', drawStartX);
-                    textNode.setAttribute('y', drawStartY + 5);
-                    textNode.setAttribute('fill', color);
-                    textNode.setAttribute('font-family', "'JetBrains Mono', monospace");
-                    textNode.setAttribute('font-size', '15px');
-                    textNode.setAttribute('font-weight', '500');
-                    textNode.textContent = input.value;
-                    drawLayer.appendChild(textNode);
-                    saveState(); // Lưu lại dòng chữ vừa viết vào lịch sử
-                }
-                input.remove(); // Xóa input tạm
+        function saveState(delay = 0) {
+            if (isRestoring) return;
+            clearTimeout(saveTimeout);
+            const executeSave = () => {
+                const state = { code: editor.value, svg: drawLayer.innerHTML, fileName: document.getElementById('file-title').textContent };
+                if (historyIndex >= 0 && history[historyIndex].code === state.code && history[historyIndex].svg === state.svg && history[historyIndex].fileName === state.fileName) return;
+                history = history.slice(0, historyIndex + 1);
+                history.push(state);
+                if (history.length > 50) history.shift(); else historyIndex++;
+                updateUndoRedoButtons();
             };
+            delay > 0 ? saveTimeout = setTimeout(executeSave, delay) : executeSave();
+        }
 
-            input.addEventListener('blur', finalizeText);
-            input.addEventListener('keydown', (evt) => {
-                if (evt.key === 'Enter') {
-                    finalizeText();
+        function undo() { if (historyIndex > 0) restoreState(history[--historyIndex]); }
+        function redo() { if (historyIndex < history.length - 1) restoreState(history[++historyIndex]); }
+
+        function restoreState(state) {
+            isRestoring = true;
+            editor.value = state.code;
+            drawLayer.innerHTML = state.svg;
+            document.getElementById('file-title').textContent = state.fileName;
+            updateCode();
+            updateUndoRedoButtons();
+            isRestoring = false;
+        }
+
+        document.getElementById('undo-btn').addEventListener('click', undo);
+        document.getElementById('redo-btn').addEventListener('click', redo);
+        saveState();
+
+        document.addEventListener('keydown', (e) => {
+            if (e.target.id === 'file-title' || e.target.id === 'temp-text-input') return;
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+                e.preventDefault(); e.shiftKey ? redo() : undo();
+            } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
+                e.preventDefault(); redo();
+            }
+        });
+
+        // --- Code Editor Logic ---
+        function updateCode() {
+            display.textContent = editor.value || " ";
+            delete display.dataset.highlighted;
+            display.className = `language-${langSelect.value} block`;
+            hljs.highlightElement(display);
+            syncThemeBackground();
+        }
+
+        editor.addEventListener('input', () => { updateCode(); saveState(500); });
+        editor.addEventListener('paste', () => setTimeout(() => { updateCode(); saveState(); }, 10));
+        editor.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart, end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 4;
+                updateCode(); saveState();
+            }
+        });
+
+        // Mảng cấu hình code mẫu & file name theo từng ngôn ngữ
+        // Đã được mã hóa an toàn bằng decodeURIComponent để chống lỗi format của các nền tảng web/CMS
+        const languageDefaults = {
+            javascript: { file: "untitled.js", code: decodeURIComponent("const%20greeting%20%3D%20%22Xin%20ch%C3%A0o%20c%C3%A1c%20nh%C3%A0%20ph%C3%A1t%20tri%E1%BB%83n!%22%3B%0A%0Afunction%20createBeautifulCode()%20%7B%0A%20%20%20%20%2F%2F%201.%20G%C3%B5%20code%20c%E1%BB%A7a%20b%E1%BA%A1n%20v%C3%A0o%20%C4%91%C3%A2y%0A%20%20%20%20%2F%2F%202.%20S%E1%BB%AD%20d%E1%BB%A5ng%20thanh%20c%C3%B4ng%20c%E1%BB%A5%20b%C3%AAn%20d%C6%B0%E1%BB%9Bi%20%C4%91%E1%BB%83%20v%E1%BA%BD%0A%20%20%20%20%2F%2F%203.%20%C4%90%E1%BB%95i%20giao%20di%E1%BB%87n%2C%20m%C3%A0u%20n%E1%BB%81n%20%E1%BB%9F%20tr%C3%AAn%20c%C3%B9ng%0A%20%20%20%20return%20%7B%0A%20%20%20%20%20%20%20%20success%3A%20true%2C%0A%20%20%20%20%20%20%20%20message%3A%20greeting%0A%20%20%20%20%7D%3B%0A%7D") },
+            html: { file: "index.html", code: decodeURIComponent("%3C!DOCTYPE%20html%3E%0A%3Chtml%20lang%3D%22vi%22%3E%0A%3Chead%3E%0A%20%20%20%20%3Ctitle%3ETrang%20Web%20C%E1%BB%A7a%20T%C3%B4i%3C%2Ftitle%3E%0A%3C%2Fhead%3E%0A%3Cbody%3E%0A%20%20%20%20%3Ch1%3EXin%20ch%C3%A0o%20th%E1%BA%BF%20gi%E1%BB%9Bi!%3C%2Fh1%3E%0A%20%20%20%20%3Cp%3EB%E1%BA%AFt%20%C4%91%E1%BA%A7u%20vi%E1%BA%BFt%20code%20HTML%20t%E1%BA%A1i%20%C4%91%C3%A2y.%3C%2Fp%3E%0A%3C%2Fbody%3E%0A%3C%2Fhtml%3E") },
+            css: { file: "style.css", code: decodeURIComponent("body%20%7B%0A%20%20%20%20background-color%3A%20%23f0f0f0%3B%0A%20%20%20%20font-family%3A%20'Inter'%2C%20sans-serif%3B%0A%7D%0A%0A.container%20%7B%0A%20%20%20%20max-width%3A%201200px%3B%0A%20%20%20%20margin%3A%200%20auto%3B%0A%20%20%20%20padding%3A%2020px%3B%0A%7D") },
+            python: { file: "main.py", code: decodeURIComponent("def%20greet(name)%3A%0A%20%20%20%20%22%22%22H%C3%A0m%20ch%C3%A0o%20h%E1%BB%8Fi%20c%C6%A1%20b%E1%BA%A3n%22%22%22%0A%20%20%20%20print(f%22Xin%20ch%C3%A0o%2C%20%7Bname%7D!%22)%0A%0Aif%20__name__%20%3D%3D%20%22__main__%22%3A%0A%20%20%20%20greet(%22L%E1%BA%ADp%20tr%C3%ACnh%20vi%C3%AAn%22)") },
+            java: { file: "Main.java", code: decodeURIComponent("public%20class%20Main%20%7B%0A%20%20%20%20public%20static%20void%20main(String%5B%5D%20args)%20%7B%0A%20%20%20%20%20%20%20%20System.out.println(%22Xin%20ch%C3%A0o%2C%20th%E1%BA%BF%20gi%E1%BB%9Bi!%22)%3B%0A%20%20%20%20%7D%0A%7D") },
+            cpp: { file: "main.cpp", code: decodeURIComponent("%23include%20%3Ciostream%3E%0A%0Aint%20main()%20%7B%0A%20%20%20%20std%3A%3Acout%20%3C%3C%20%22Xin%20ch%C3%A0o%2C%20th%E1%BA%BF%20gi%E1%BB%9Bi!%22%20%3C%3C%20std%3A%3Aendl%3B%0A%20%20%20%20return%200%3B%0A%7D") },
+            csharp: { file: "Program.cs", code: decodeURIComponent("using%20System%3B%0A%0Anamespace%20HelloWorld%0A%7B%0A%20%20%20%20class%20Program%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20static%20void%20Main(string%5B%5D%20args)%0A%20%20%20%20%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20Console.WriteLine(%22Xin%20ch%C3%A0o%2C%20th%E1%BA%BF%20gi%E1%BB%9Bi!%22)%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%7D") },
+            php: { file: "index.php", code: decodeURIComponent("%3C%3Fphp%0A%24greeting%20%3D%20%22Xin%20ch%C3%A0o%20th%E1%BA%BF%20gi%E1%BB%9Bi%22%3B%0Aecho%20%22%3Ch1%3E%22%20.%20%24greeting%20.%20%22!%3C%2Fh1%3E%22%3B%0A%3F%3E") },
+            ruby: { file: "script.rb", code: decodeURIComponent("def%20greet(name)%0A%20%20puts%20%22Xin%20ch%C3%A0o%2C%20%23%7Bname%7D!%22%0Aend%0A%0Agreet(%22Th%E1%BA%BF%20gi%E1%BB%9Bi%22)") },
+            go: { file: "main.go", code: decodeURIComponent("package%20main%0A%0Aimport%20%22fmt%22%0A%0Afunc%20main()%20%7B%0A%20%20%20%20fmt.Println(%22Xin%20ch%C3%A0o%2C%20th%E1%BA%BF%20gi%E1%BB%9Bi!%22)%0A%7D") },
+            rust: { file: "main.rs", code: decodeURIComponent("fn%20main()%20%7B%0A%20%20%20%20println!(%22Xin%20ch%C3%A0o%2C%20th%E1%BA%BF%20gi%E1%BB%9Bi!%22)%3B%0A%7D") },
+            sql: { file: "query.sql", code: decodeURIComponent("SELECT%20id%2C%20name%2C%20email%0AFROM%20users%0AWHERE%20status%20%3D%20'active'%0AORDER%20BY%20created_at%20DESC%3B") },
+            json: { file: "data.json", code: decodeURIComponent("%7B%0A%20%20%20%20%22name%22%3A%20%22CodePic%22%2C%0A%20%20%20%20%22version%22%3A%20%221.0.0%22%2C%0A%20%20%20%20%22description%22%3A%20%22Tr%C3%ACnh%20t%E1%BA%A1o%20%E1%BA%A3nh%20code%20%C4%91%E1%BA%B9p%20m%E1%BA%AFt%22%2C%0A%20%20%20%20%22author%22%3A%20%22B%E1%BA%A1n%22%0A%7D") },
+            typescript: { file: "app.ts", code: decodeURIComponent("interface%20User%20%7B%0A%20%20%20%20name%3A%20string%3B%0A%20%20%20%20id%3A%20number%3B%0A%7D%0A%0Aconst%20user%3A%20User%20%3D%20%7B%0A%20%20%20%20name%3A%20%22John%20Doe%22%2C%0A%20%20%20%20id%3A%201%0A%7D%3B%0A%0Aconsole.log(%60Xin%20ch%C3%A0o%2C%20%24%7Buser.name%7D!%60)%3B") },
+            markdown: { file: "README.md", code: decodeURIComponent("%23%20CodePic%0A%0AM%E1%BB%99t%20c%C3%B4ng%20c%E1%BB%A5%20t%E1%BA%A1o%20%E1%BA%A3nh%20snippet%20code%20tuy%E1%BB%87t%20%C4%91%E1%BA%B9p.%0A%0A%23%23%20T%C3%ADnh%20n%C4%83ng%0A*%20H%E1%BB%97%20tr%E1%BB%A3%20nhi%E1%BB%81u%20ng%C3%B4n%20ng%E1%BB%AF%0A*%20%C4%90%E1%BB%95i%20theme%20linh%20ho%E1%BA%A1t%0A*%20C%C3%B4ng%20c%E1%BB%A5%20v%E1%BA%BD%20t%C3%ADch%20h%E1%BB%A3p") },
+            xml: { file: "config.xml", code: decodeURIComponent("%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Cconfig%3E%0A%20%20%20%20%3Capp_name%3ECodePic%3C%2Fapp_name%3E%0A%20%20%20%20%3Cversion%3E1.0%3C%2Fversion%3E%0A%20%20%20%20%3Csettings%3E%0A%20%20%20%20%20%20%20%20%3Ctheme%3Edark%3C%2Ftheme%3E%0A%20%20%20%20%3C%2Fsettings%3E%0A%3C%2Fconfig%3E") }
+        };
+
+        // Hàm kiểm tra xem nội dung hiện tại có phải là nội dung mặc định không
+        function isDefaultCode(code) {
+            const trimmed = code.trim();
+            if (!trimmed) return true; // Nếu trống cũng coi như mặc định, cho phép điền code mẫu mới
+            return Object.values(languageDefaults).some(def => def.code.trim() === trimmed);
+        }
+
+        // Hàm kiểm tra xem tên file hiện tại có phải là tên file mặc định không
+        function isDefaultTitle(title) {
+            return Object.values(languageDefaults).some(def => def.file === title);
+        }
+
+        // Khi thay đổi ngôn ngữ -> Cập nhật tên file, nội dung code mẫu & Highlight code
+        langSelect.addEventListener('change', () => {
+            const selectedLang = langSelect.value;
+            const defaultTemplate = languageDefaults[selectedLang];
+            
+            if (defaultTemplate) {
+                const titleEl = document.getElementById('file-title');
+                
+                // Chỉ ghi đè tên file nếu người dùng chưa sửa tên file (đang giữ một trong các tên mặc định)
+                if (isDefaultTitle(titleEl.textContent)) {
+                    titleEl.textContent = defaultTemplate.file;
                 }
-                if (evt.key === 'Escape') {
-                    isFinalized = true;
-                    input.remove(); // Hủy nếu bấm Esc
+                
+                // Chỉ ghi đè code nếu khu vực code đang trống hoặc chứa code mặc định chưa qua chỉnh sửa
+                if (isDefaultCode(editor.value)) {
+                    editor.value = defaultTemplate.code;
                 }
-            });
+            }
+            
+            updateCode();
+            saveState(); // Lưu vào lịch sử Undo/Redo
+        });
 
-            return; // Dừng logic ở đây, không chạy code vẽ shape bên dưới
-        }
+        themeSelect.addEventListener('change', () => {
+            hljsThemeLink.href = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/${themeSelect.value}.min.css`;
+            setTimeout(syncThemeBackground, 150);
+        });
 
-        isDrawing = true;
-
-        if (currentTool === 'rect') {
-            currentSvgShape = document.createElementNS(svgNS, 'rect');
-            currentSvgShape.setAttribute('x', drawStartX);
-            currentSvgShape.setAttribute('y', drawStartY);
-            currentSvgShape.setAttribute('width', 0);
-            currentSvgShape.setAttribute('height', 0);
-            currentSvgShape.setAttribute('fill', 'none');
-            currentSvgShape.setAttribute('stroke', color);
-            currentSvgShape.setAttribute('stroke-width', strokeWidth);
-            currentSvgShape.setAttribute('rx', '4'); // bo góc nhẹ
-        } else if (currentTool === 'circle') {
-            currentSvgShape = document.createElementNS(svgNS, 'ellipse');
-            currentSvgShape.setAttribute('cx', drawStartX);
-            currentSvgShape.setAttribute('cy', drawStartY);
-            currentSvgShape.setAttribute('rx', 0);
-            currentSvgShape.setAttribute('ry', 0);
-            currentSvgShape.setAttribute('fill', 'none');
-            currentSvgShape.setAttribute('stroke', color);
-            currentSvgShape.setAttribute('stroke-width', strokeWidth);
-        } else if (currentTool === 'arrow') {
-            currentSvgShape = document.createElementNS(svgNS, 'path');
-            currentSvgShape.setAttribute('fill', 'none');
-            currentSvgShape.setAttribute('stroke', color);
-            currentSvgShape.setAttribute('stroke-width', strokeWidth);
-            currentSvgShape.setAttribute('stroke-linecap', 'round');
-            currentSvgShape.setAttribute('stroke-linejoin', 'round');
-        }
-
-        if (currentSvgShape) {
-            drawLayer.appendChild(currentSvgShape);
-        }
-    });
-
-    // Di chuyển chuột khi vẽ
-    drawLayer.addEventListener('mousemove', (e) => {
-        if (!isDrawing || !currentSvgShape) return;
-
-        const rect = drawLayer.getBoundingClientRect();
-        const currentX = e.clientX - rect.left;
-        const currentY = e.clientY - rect.top;
-
-        if (currentTool === 'rect') {
-            const x = Math.min(drawStartX, currentX);
-            const y = Math.min(drawStartY, currentY);
-            const width = Math.abs(currentX - drawStartX);
-            const height = Math.abs(currentY - drawStartY);
-            currentSvgShape.setAttribute('x', x);
-            currentSvgShape.setAttribute('y', y);
-            currentSvgShape.setAttribute('width', width);
-            currentSvgShape.setAttribute('height', height);
-        } else if (currentTool === 'circle') {
-            const cx = drawStartX + (currentX - drawStartX) / 2;
-            const cy = drawStartY + (currentY - drawStartY) / 2;
-            const rx = Math.abs(currentX - drawStartX) / 2;
-            const ry = Math.abs(currentY - drawStartY) / 2;
-            currentSvgShape.setAttribute('cx', cx);
-            currentSvgShape.setAttribute('cy', cy);
-            currentSvgShape.setAttribute('rx', rx);
-            currentSvgShape.setAttribute('ry', ry);
-        } else if (currentTool === 'arrow') {
-            // Thuật toán vẽ path cho đường thẳng có đầu mũi tên
-            const angle = Math.atan2(currentY - drawStartY, currentX - drawStartX);
-            const headlen = 12; // Chiều dài đầu mũi tên
-            const headAngle = Math.PI / 6;
-
-            const x3 = currentX - headlen * Math.cos(angle - headAngle);
-            const y3 = currentY - headlen * Math.sin(angle - headAngle);
-            const x4 = currentX - headlen * Math.cos(angle + headAngle);
-            const y4 = currentY - headlen * Math.sin(angle + headAngle);
-
-            const d = `M ${drawStartX} ${drawStartY} L ${currentX} ${currentY} M ${currentX} ${currentY} L ${x3} ${y3} M ${currentX} ${currentY} L ${x4} ${y4}`;
-            currentSvgShape.setAttribute('d', d);
-        }
-    });
-
-    // Kết thúc vẽ
-    const stopDrawing = () => {
-        if (isDrawing) {
-            isDrawing = false;
-            if (currentSvgShape) {
-                saveState(); // Lưu lại hình vẽ vừa tạo
+        function syncThemeBackground() {
+            const computedStyle = window.getComputedStyle(display);
+            let bgColor = computedStyle.backgroundColor;
+            if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') bgColor = '#1e1e1e';
+            macWindow.style.backgroundColor = bgColor;
+            const rgb = bgColor.match(/\d+/g);
+            if (rgb) {
+                const brightness = Math.round(((parseInt(rgb[0]) * 299) + (parseInt(rgb[1]) * 587) + (parseInt(rgb[2]) * 114)) / 1000);
+                if(!htmlElement.classList.contains('dark')) {
+                     editor.style.caretColor = brightness > 125 ? '#0f172a' : '#ffffff';
+                } else {
+                     editor.style.caretColor = '#ffffff';
+                }
             }
         }
-        currentSvgShape = null;
-    };
-    drawLayer.addEventListener('mouseup', stopDrawing);
-    drawLayer.addEventListener('mouseleave', stopDrawing);
 
-    // --- XUẤT ẢNH PNG ---
-    document.getElementById('export-btn').addEventListener('click', async () => {
-        const btn = document.getElementById('export-btn');
-        const msg = document.getElementById('loading-msg');
-
-        btn.disabled = true;
-        btn.classList.add('opacity-50');
-        msg.classList.remove('hidden');
-        editor.style.display = 'none';
-
-        try {
-            await new Promise(r => setTimeout(r, 100));
-            const canvas = await html2canvas(exportContainer, {
-                scale: 2,
-                backgroundColor: null,
-                useCORS: true,
-                logging: false
-            });
-
-            editor.style.display = 'block';
-            const link = document.createElement('a');
-            link.download = 'code-snippet.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        } catch (err) {
-            alert("Đã xảy ra lỗi khi tạo ảnh!");
-            editor.style.display = 'block';
-        } finally {
-            btn.disabled = false;
-            btn.classList.remove('opacity-50');
-            msg.classList.add('hidden');
+        bgSelect.addEventListener('change', () => exportContainer.style.background = bgSelect.value);
+        if(paddingSlider) {
+             paddingSlider.addEventListener('input', () => exportContainer.style.padding = `${paddingSlider.value}px`);
         }
-    });
 
-    exportContainer.style.background = bgSelect.value;
-</script>
+        // --- Format Button ---
+        document.getElementById('format-btn').addEventListener('click', () => {
+            let code = editor.value, lang = langSelect.value;
+            try {
+                if (['javascript', 'json', 'typescript'].includes(lang)) {
+                    code = js_beautify(code, {indent_size: 4});
+                } else if (lang === 'html' || lang === 'xml') {
+                    code = html_beautify(code, {indent_size: 4});
+                } else if (lang === 'css') {
+                    code = css_beautify(code, {indent_size: 4});
+                } else if (['java', 'cpp', 'csharp', 'php', 'rust', 'go'].includes(lang)) {
+                    // Sử dụng formatter của JS cho các ngôn ngữ C-style
+                    code = js_beautify(code, {indent_size: 4});
+                } else {
+                    // Từ chối format cho Ruby, Python, SQL, Markdown... vì sẽ làm hỏng code
+                    alert(translations[currentUILang].err_format_unsupported);
+                    return;
+                }
+                editor.value = code; updateCode(); saveState();
+            } catch (err) { 
+                alert(translations[currentUILang].err_format); 
+            }
+        });
+
+        // --- Resize Window ---
+        let isResizing = false;
+        document.querySelectorAll('.resize-handle').forEach(handle => {
+            handle.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                macWindow.style.transition = 'none';
+                e.preventDefault();
+            });
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const rect = macWindow.getBoundingClientRect();
+            const newWidth = Math.max(320, Math.min(Math.abs(e.clientX - (rect.left + rect.width/2)) * 2, window.innerWidth - 64));
+            macWindow.style.width = `${newWidth}px`;
+        });
+        document.addEventListener('mouseup', () => isResizing = false);
+
+        document.getElementById('file-title').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); this.blur(); }
+        });
+
+        // --- DRAWING LOGIC ---
+        let currentTool = 'edit', isDrawing = false, currentSvgShape = null, startX = 0, startY = 0;
+
+        function activateTool(tool) {
+            currentTool = tool;
+            toolBtns.forEach(b => b.classList.remove('active'));
+            document.querySelector(`.tool-btn[data-tool="${tool}"]`).classList.add('active');
+            
+            if (tool === 'edit') {
+                drawLayer.style.pointerEvents = 'none';
+                drawLayer.style.cursor = 'default';
+            } else {
+                drawLayer.style.pointerEvents = 'auto';
+                drawLayer.style.cursor = tool === 'text' ? 'text' : 'crosshair';
+            }
+        }
+
+        toolBtns.forEach(btn => btn.addEventListener('click', () => {
+            activateTool(btn.dataset.tool === currentTool && btn.dataset.tool !== 'edit' ? 'edit' : btn.dataset.tool);
+        }));
+
+        document.getElementById('clear-draw-btn').addEventListener('click', () => {
+            if (drawLayer.innerHTML !== '') { drawLayer.innerHTML = ''; saveState(); }
+        });
+
+        drawLayer.addEventListener('pointerdown', (e) => {
+            if (currentTool === 'edit') return;
+            e.preventDefault();
+            const rect = drawLayer.getBoundingClientRect();
+            startX = e.clientX - rect.left; startY = e.clientY - rect.top;
+            const color = colorPicker.value, svgNS = 'http://www.w3.org/2000/svg';
+
+            if (currentTool === 'text') {
+                const oldInput = document.getElementById('temp-text-input');
+                if (oldInput) oldInput.blur();
+
+                const input = document.createElement('input');
+                input.id = 'temp-text-input'; input.type = 'text'; input.placeholder = tempTextPlaceholder;
+                input.style.cssText = `position:absolute; left:${startX}px; top:${startY-10}px; color:${color}; background:transparent; border:1px dashed rgba(150,150,150,0.5); outline:none; font-family:'JetBrains Mono',monospace; font-size:15px; z-index:50; min-width:140px; border-radius:4px; padding:2px 4px;`;
+                drawLayer.parentElement.appendChild(input);
+                setTimeout(() => input.focus(), 10);
+
+                input.addEventListener('input', function() { this.style.width = ((this.value.length + 2) * 9) + 'px'; });
+                
+                let isFinalized = false;
+                const finalize = () => {
+                    if (isFinalized) return;
+                    isFinalized = true;
+                    if (input.value.trim() !== '') {
+                        const txt = document.createElementNS(svgNS, 'text');
+                        txt.setAttribute('x', startX); txt.setAttribute('y', startY + 5);
+                        txt.setAttribute('fill', color); txt.setAttribute('font-family', "'JetBrains Mono', monospace");
+                        txt.setAttribute('font-size', '15px'); txt.textContent = input.value;
+                        drawLayer.appendChild(txt); saveState();
+                    }
+                    input.remove();
+                };
+                input.addEventListener('blur', finalize);
+                input.addEventListener('keydown', (e) => { if (e.key === 'Enter') finalize(); if (e.key === 'Escape') { isFinalized=true; input.remove(); } });
+                return;
+            }
+
+            isDrawing = true;
+            if (currentTool === 'rect') {
+                currentSvgShape = document.createElementNS(svgNS, 'rect');
+                currentSvgShape.setAttribute('fill', 'none'); currentSvgShape.setAttribute('rx', '4');
+            } else if (currentTool === 'circle') {
+                currentSvgShape = document.createElementNS(svgNS, 'ellipse');
+                currentSvgShape.setAttribute('fill', 'none');
+            } else if (currentTool === 'arrow') {
+                currentSvgShape = document.createElementNS(svgNS, 'path');
+                currentSvgShape.setAttribute('fill', 'none'); currentSvgShape.setAttribute('stroke-linecap', 'round'); currentSvgShape.setAttribute('stroke-linejoin', 'round');
+            }
+
+            if (currentSvgShape) {
+                currentSvgShape.setAttribute('stroke', color);
+                currentSvgShape.setAttribute('stroke-width', '3');
+                drawLayer.appendChild(currentSvgShape);
+            }
+        });
+
+        drawLayer.addEventListener('pointermove', (e) => {
+            if (!isDrawing || !currentSvgShape) return;
+            const rect = drawLayer.getBoundingClientRect();
+            const curX = e.clientX - rect.left, curY = e.clientY - rect.top;
+
+            if (currentTool === 'rect') {
+                currentSvgShape.setAttribute('x', Math.min(startX, curX)); currentSvgShape.setAttribute('y', Math.min(startY, curY));
+                currentSvgShape.setAttribute('width', Math.abs(curX - startX)); currentSvgShape.setAttribute('height', Math.abs(curY - startY));
+            } else if (currentTool === 'circle') {
+                currentSvgShape.setAttribute('cx', startX + (curX - startX)/2); currentSvgShape.setAttribute('cy', startY + (curY - startY)/2);
+                currentSvgShape.setAttribute('rx', Math.abs(curX - startX)/2); currentSvgShape.setAttribute('ry', Math.abs(curY - startY)/2);
+            } else if (currentTool === 'arrow') {
+                const angle = Math.atan2(curY - startY, curX - startX), headlen = 12, headAngle = Math.PI / 6;
+                const x3 = curX - headlen * Math.cos(angle - headAngle), y3 = curY - headlen * Math.sin(angle - headAngle);
+                const x4 = curX - headlen * Math.cos(angle + headAngle), y4 = curY - headlen * Math.sin(angle + headAngle);
+                currentSvgShape.setAttribute('d', `M ${startX} ${startY} L ${curX} ${curY} M ${curX} ${curY} L ${x3} ${y3} M ${curX} ${currentY=curY} L ${x4} ${y4}`);
+            }
+        });
+
+        const stopDrawing = () => { if (isDrawing) { isDrawing = false; if (currentSvgShape) saveState(); } currentSvgShape = null; };
+        drawLayer.addEventListener('pointerup', stopDrawing);
+        drawLayer.addEventListener('pointerleave', stopDrawing);
+
+        // --- EXPORT ---
+        document.getElementById('export-btn').addEventListener('click', async function() {
+            const oldText = this.innerHTML;
+            const loadingText = translations[currentUILang].msg_exporting;
+            this.innerHTML = `<svg class="animate-spin w-4 h-4 mr-1" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> <span>${loadingText}</span>`;
+            this.disabled = true;
+            editor.style.display = 'none';
+
+            try {
+                await new Promise(r => setTimeout(r, 100));
+                const canvas = await html2canvas(exportContainer, { scale: 2, backgroundColor: null, useCORS: true, logging: false });
+                const link = document.createElement('a');
+                link.download = `code-snippet-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch(e) {
+                alert(translations[currentUILang].err_export);
+            } finally {
+                editor.style.display = 'block';
+                this.innerHTML = oldText;
+                this.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
