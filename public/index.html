@@ -125,16 +125,19 @@
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-neutral-950 dark:text-gray-100 flex flex-col h-screen transition-colors duration-200">
 
+    <!-- Skip link for keyboard users -->
+    <a href="#main" class="sr-only focus:not-sr-only" aria-label="Bỏ qua tới nội dung chính">Bỏ qua tới nội dung</a>
+
 <!-- TOP NAVIGATION BAR -->
-<header class="flex-none bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-800 shadow-sm z-50 relative">
+<header class="flex-none bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-800 shadow-sm z-50 relative" role="banner">
     <div class="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 max-w-screen-2xl mx-auto w-full">
 
         <!-- Left: Brand & Mobile Menu Toggle -->
         <div class="flex items-center gap-2 shrink-0">
             <button id="mobile-menu-btn"
                     class="sm:hidden p-2 -ml-1 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 rounded-lg transition-colors"
-                    title="Menu">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    title="Menu" aria-label="Mở menu">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -156,9 +159,9 @@
         <!-- Settings Group (Collapsible on Mobile) -->
         <div id="settings-group"
              class="hidden sm:flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2 absolute sm:relative top-full left-0 w-full sm:w-auto bg-white dark:bg-neutral-900 sm:bg-transparent p-4 sm:p-0 border-b border-gray-200 dark:border-neutral-800 sm:border-0 shadow-xl sm:shadow-none z-50 overflow-x-auto no-scrollbar">
-            <select id="lang-select"
-                    class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-36 shrink-0"
-                    title="Ngôn ngữ Lập trình" data-i18n-title="lang_select_title">
+        <select id="lang-select" aria-label="Ngôn ngữ lập trình"
+            class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-36 shrink-0"
+            title="Ngôn ngữ Lập trình" data-i18n-title="lang_select_title">
                 <option value="javascript">JavaScript</option>
                 <option value="html">HTML</option>
                 <option value="css">CSS</option>
@@ -177,9 +180,9 @@
                 <option value="xml">XML</option>
             </select>
 
-            <select id="theme-select"
-                    class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-40 shrink-0"
-                    title="Theme Code" data-i18n-title="theme_select_title">
+        <select id="theme-select" aria-label="Theme code"
+            class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-40 shrink-0"
+            title="Theme Code" data-i18n-title="theme_select_title">
                 <option value="atom-one-dark">Atom One Dark</option>
                 <option value="monokai">Monokai</option>
                 <option value="base16/dracula">Dracula</option>
@@ -188,9 +191,9 @@
                 <option value="vs2015">VS 2015</option>
             </select>
 
-            <select id="bg-select"
-                    class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-44 shrink-0"
-                    title="Màu nền" data-i18n-title="bg_select_title">
+        <select id="bg-select" aria-label="Màu nền"
+            class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-44 shrink-0"
+            title="Màu nền" data-i18n-title="bg_select_title">
                 <option value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)" data-i18n="bg_purple">Tím Hoàng Hôn
                 </option>
                 <option value="linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)" data-i18n="bg_blue">Đại Dương Xanh
@@ -207,7 +210,7 @@
 
             <div class="flex items-center justify-between sm:justify-start gap-2 bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 shrink-0">
                 <span class="text-xs text-gray-500 dark:text-gray-400" data-i18n="padding_label">Padding</span>
-                <input type="range" id="padding-slider" min="16" max="128" value="64"
+                <input type="range" id="padding-slider" aria-label="Padding" min="16" max="128" value="64"
                        class="w-full sm:w-24 h-1 bg-gray-300 dark:bg-neutral-600 rounded-lg appearance-none cursor-pointer">
             </div>
         </div>
@@ -215,46 +218,48 @@
         <!-- Right: Actions -->
         <div class="flex items-center gap-1 sm:gap-2 shrink-0 ml-auto sm:ml-4">
             <!-- UI Language Toggle -->
-            <select id="ui-lang-select"
-                    class="bg-transparent text-gray-900 dark:text-gray-100 text-sm font-semibold outline-none cursor-pointer hover:text-gray-600 dark:hover:text-gray-300 transition-colors mr-1"
-                    title="Ngôn ngữ giao diện" data-i18n-title="ui_lang_title">
+        <select id="ui-lang-select" aria-label="Ngôn ngữ giao diện"
+            class="bg-transparent text-gray-900 dark:text-gray-100 text-sm font-semibold outline-none cursor-pointer hover:text-gray-600 dark:hover:text-gray-300 transition-colors mr-1"
+            title="Ngôn ngữ giao diện" data-i18n-title="ui_lang_title">
                 <option value="vi">VI</option>
                 <option value="en">EN</option>
             </select>
 
-            <button id="theme-toggle"
-                    class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition-colors"
-                    title="Bật/Tắt Chế Độ Tối" data-i18n-title="theme_toggle_title">
+        <button id="theme-toggle" aria-pressed="false"
+            class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition-colors"
+            title="Bật/Tắt Chế Độ Tối" data-i18n-title="theme_toggle_title">
                 <!-- Sun Icon (Light Mode) -->
-                <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor"
-                     viewBox="0 0 24 24">
+             <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor"
+                 viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
                 </svg>
                 <!-- Moon Icon (Dark Mode) -->
-                <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor"
-                     viewBox="0 0 24 24">
+             <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor"
+                 viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
                 </svg>
             </button>
 
-            <button id="format-btn"
+            <button id="format-btn" aria-label="Format code"
                     class="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    aria-hidden="true" focusable="false"
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M4 6h16M4 12h16M4 18h7"></path>
                 </svg>
                 <span data-i18n="btn_format">Format</span>
             </button>
 
-            <button id="export-btn"
+            <button id="export-btn" aria-label="Lưu ảnh" aria-describedby="export-desc"
                     class="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm transition-all">
-                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                 </svg>
                 <span data-i18n="btn_export" class="hidden sm:inline whitespace-nowrap">Lưu ảnh</span>
+                <span id="export-desc" class="sr-only">Tải xuống hình ảnh hiển thị</span>
             </button>
         </div>
     </div>
@@ -272,10 +277,10 @@
                  class="rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] w-[800px] min-w-[320px] max-w-full border border-white/10 flex flex-col relative group"
                  style="background-color: #282c34;">
 
-                <!-- SVG Draw Layer -->
-                <svg id="draw-layer" xmlns="http://www.w3.org/2000/svg"
-                     class="absolute inset-0 w-full h-full z-20 pointer-events-none rounded-xl"
-                     style="overflow: visible;"></svg>
+             <!-- SVG Draw Layer -->
+             <svg id="draw-layer" xmlns="http://www.w3.org/2000/svg"
+                 class="absolute inset-0 w-full h-full z-20 pointer-events-none rounded-xl"
+                 style="overflow: visible;" aria-hidden="true" focusable="false"></svg>
 
                 <!-- Resize Handles -->
                 <div class="resize-handle left absolute left-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-l-xl z-30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -289,14 +294,14 @@
                         <div class="w-3 h-3 rounded-full bg-[#27c93f] shadow-sm"></div>
                     </div>
                     <div class="flex-1 flex justify-center px-20">
-                        <span id="file-title" contenteditable="true" spellcheck="false"
-                              class="text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition hover:bg-white/5 rounded px-3 pt-1 pb-1.5 min-w-[50px] max-w-[250px] whitespace-nowrap overflow-hidden text-ellipsis relative block cursor-text leading-normal">untitled.js</span>
+                <span id="file-title" contenteditable="true" spellcheck="false" role="textbox" aria-label="Tên tệp có thể chỉnh sửa" aria-live="polite"
+                    class="text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition hover:bg-white/5 rounded px-3 pt-1 pb-1.5 min-w-[50px] max-w-[250px] whitespace-nowrap overflow-hidden text-ellipsis relative block cursor-text leading-normal">untitled.js</span>
                     </div>
                 </div>
 
                 <!-- Code Area -->
-                <div class="relative w-full text-left code-grid-wrapper z-0">
-                        <pre class="m-0"><code id="highlight-display" class="language-javascript block">const greeting = "Xin chào các nhà phát triển!";
+        <div class="relative w-full text-left code-grid-wrapper z-0" role="region" aria-label="Khu vực xem mã và chỉnh sửa">
+            <pre class="m-0"><code id="highlight-display" class="language-javascript block" aria-hidden="true">const greeting = "Xin chào các nhà phát triển!";
 
 function createBeautifulCode() {
     // 1. Gõ code của bạn vào đây
@@ -307,7 +312,7 @@ function createBeautifulCode() {
         message: greeting
     };
 }</code></pre>
-                    <textarea id="code-editor" spellcheck="false">const greeting = "Xin chào các nhà phát triển!";
+                    <textarea id="code-editor" spellcheck="false" aria-label="Trình chỉnh sửa mã" aria-multiline="true">const greeting = "Xin chào các nhà phát triển!";
 
 function createBeautifulCode() {
     // 1. Gõ code của bạn vào đây
