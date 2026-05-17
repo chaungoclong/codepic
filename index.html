@@ -1,212 +1,301 @@
 <!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZH8GNL7T2Q"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    <!-- Basic & Mobile -->
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 
-      gtag('config', 'G-ZH8GNL7T2Q');
+    <title>CodePic - Tạo Ảnh Code Snippet Đẹp, Nhanh & Chuyên Nghiệp</title>
+
+    <!-- SEO & Crawl -->
+    <meta name="description"
+          content="CodePic là công cụ trực tuyến miễn phí giúp biến code snippet thành ảnh đẹp chỉ trong vài giây. Hỗ trợ highlight cú pháp nhiều ngôn ngữ, tùy chỉnh theme, nền, màu sắc và vẽ ghi chú."/>
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
+    <meta name="author" content="CodePic"/>
+    <meta name="application-name" content="CodePic"/>
+    <meta name="theme-color" content="#0F172A"/>
+    <link rel="canonical" href="https://codepic.dragontnt.online/"/>
+
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website"/>
+    <meta property="og:locale" content="vi_VN"/>
+    <meta property="og:site_name" content="CodePic"/>
+    <meta property="og:url" content="https://codepic.dragontnt.online/"/>
+    <meta property="og:title" content="CodePic - Tạo Ảnh Code Snippet Đẹp, Nhanh & Chuyên Nghiệp"/>
+    <meta property="og:description"
+          content="Biến đoạn code của bạn thành ảnh đẹp chỉ trong vài giây. Hỗ trợ nhiều ngôn ngữ lập trình, theme tùy chỉnh, nền đẹp và vẽ ghi chú trực tiếp."/>
+    <meta property="og:image" content="https://codepic.dragontnt.online/img/og-image.png"/>
+    <meta property="og:image:secure_url" content="https://codepic.dragontnt.online/img/og-image.png"/>
+    <meta property="og:image:type" content="image/png"/>
+    <meta property="og:image:width" content="1200"/>
+    <meta property="og:image:height" content="630"/>
+    <meta property="og:image:alt" content="CodePic - Công cụ tạo ảnh code snippet đẹp"/>
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="CodePic - Tạo Ảnh Code Snippet Đẹp, Nhanh & Chuyên Nghiệp"/>
+    <meta name="twitter:description"
+          content="Biến đoạn code thành ảnh đẹp với nhiều theme, nền tùy chỉnh và hỗ trợ nhiều ngôn ngữ lập trình."/>
+    <meta name="twitter:image" content="https://codepic.dragontnt.online/img/og-image.png"/>
+    <meta name="twitter:image:alt" content="CodePic - Công cụ tạo ảnh code snippet đẹp"/>
+
+    <!-- Performance & Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+          rel="stylesheet"/>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="app.css"/>
+    <link id="hljs-theme" rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css"/>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "CodePic",
+            "url": "https://codepic.dragontnt.online/",
+            "description": "CodePic là công cụ trực tuyến miễn phí giúp biến đoạn mã (code snippet) của bạn thành hình ảnh đẹp, chuyên nghiệp chỉ trong vài giây.",
+            "applicationCategory": "DeveloperApplication",
+            "applicationSubCategory": "Code Utility",
+            "operatingSystem": "All",
+            "browserRequirements": "Requires HTML5, JavaScript, and modern web browser",
+            "image": "https://codepic.dragontnt.online/img/og-image.png",
+            "author": {
+                "@type": "Organization",
+                "name": "CodePic"
+            },
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+            }
+        }
     </script>
-
-    <!-- Primary Meta Tags -->
-    <title>CodePic - Tạo Ảnh Code Snippet Đẹp, Tùy Chỉnh Chuyên Nghiệp</title>
-    <meta name="title" content="CodePic - Tạo Ảnh Code Snippet Đẹp, Tùy Chỉnh Chuyên Nghiệp">
-    <meta name="description" content="CodePic là công cụ trực tuyến miễn phí giúp tạo ảnh từ code (code snippet) tuyệt đẹp. Hỗ trợ highlight cú pháp nhiều ngôn ngữ, đổi theme, màu nền và vẽ ghi chú.">
-    <meta name="keywords" content="tạo ảnh code, code to image, code snippet, chia sẻ code, highlight cú pháp, trình tạo ảnh code, CodePic">
-    <meta name="author" content="CodePic">
-    <meta name="robots" content="index, follow">
-    <meta name="language" content="Vietnamese">
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://codepic.dragontnt.online/">
-
-    <!-- Open Graph / Facebook / Zalo -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://codepic.dragontnt.online/">
-    <meta property="og:title" content="CodePic - Tạo Ảnh Code Snippet Đẹp & Nhanh Chóng">
-    <meta property="og:description" content="Biến đoạn code của bạn thành những bức ảnh tuyệt đẹp chỉ trong vài giây. Hỗ trợ tùy chỉnh giao diện, màu nền và vẽ ghi chú trực tiếp.">
-    <meta property="og:image" content="https://codepic.dragontnt.online/og-image.webp">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://codepic.dragontnt.online/">
-    <meta property="twitter:title" content="CodePic - Tạo Ảnh Code Snippet Đẹp & Nhanh Chóng">
-    <meta property="twitter:description" content="Biến đoạn code của bạn thành những bức ảnh tuyệt đẹp chỉ trong vài giây. Hỗ trợ tùy chỉnh giao diện, màu nền và vẽ ghi chú trực tiếp.">
-    <meta property="twitter:image" content="https://codepic.dragontnt.online/og-image.webp">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
+            darkMode: "class",
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+                        sans: ["Inter", "system-ui", "sans-serif"],
+                        mono: ["JetBrains Mono", "ui-monospace", "monospace"]
                     },
                     colors: {
-                        primary: '#10b981', /* Mint Green / Emerald 500 */
-                        'primary-hover': '#059669', /* Emerald 600 */
+                        primary: "#10b981",
+                        "primary-hover": "#059669"
                     }
                 }
             }
-        }
+        };
     </script>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZH8GNL7T2Q"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-    <!-- Highlight.js -->
-    <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        function gtag() {
+            dataLayer.push(arguments);
+        }
 
-    <!-- html2canvas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        gtag("js", new Date());
+        gtag("config", "G-ZH8GNL7T2Q");
+    </script>
 
-    <!-- JS Beautify -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
-
-    <link rel="stylesheet" href="app.css">
+    <!-- Third Party Libraries -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
+    <script defer src="app.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-neutral-950 dark:text-gray-100 flex flex-col h-screen transition-colors duration-200">
 
-    <!-- TOP NAVIGATION BAR -->
-    <header class="flex-none bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-800 shadow-sm z-50 relative">
-        <div class="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 max-w-screen-2xl mx-auto w-full">
-            
-            <!-- Left: Brand & Mobile Menu Toggle -->
-            <div class="flex items-center gap-2 shrink-0">
-                <button id="mobile-menu-btn" class="sm:hidden p-2 -ml-1 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 rounded-lg transition-colors" title="Menu">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-                
-                <!-- SEO Tối ưu: Dùng thẻ <h1> thay vì <div> cho tiêu đề trang -->
-                <div class="flex flex-col">
-                    <h1 class="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-500 select-none leading-tight" data-i18n="app_title">
-                        CodePic
-                    </h1>
-                    <!-- Thẻ <h2> mô tả chức năng được ẩn đi nhưng bot Google vẫn đọc được -->
-                    <h2 class="sr-only">Trình Tạo Ảnh Code Snippet</h2>
-                </div>
-            </div>
-            
-            <div class="h-6 w-px bg-gray-200 dark:bg-neutral-700 hidden sm:block mx-4"></div>
+<!-- TOP NAVIGATION BAR -->
+<header class="flex-none bg-white dark:bg-neutral-900 border-b border-gray-200 dark:border-neutral-800 shadow-sm z-50 relative">
+    <div class="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 max-w-screen-2xl mx-auto w-full">
 
-            <!-- Settings Group (Collapsible on Mobile) -->
-            <div id="settings-group" class="hidden sm:flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2 absolute sm:relative top-full left-0 w-full sm:w-auto bg-white dark:bg-neutral-900 sm:bg-transparent p-4 sm:p-0 border-b border-gray-200 dark:border-neutral-800 sm:border-0 shadow-xl sm:shadow-none z-50 overflow-x-auto no-scrollbar">
-                <select id="lang-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-36 shrink-0" title="Ngôn ngữ Lập trình" data-i18n-title="lang_select_title">
-                    <option value="javascript">JavaScript</option>
-                    <option value="html">HTML</option>
-                    <option value="css">CSS</option>
-                    <option value="python">Python</option>
-                    <option value="java">Java</option>
-                    <option value="cpp">C++</option>
-                    <option value="csharp">C#</option>
-                    <option value="php">PHP</option>
-                    <option value="ruby">Ruby</option>
-                    <option value="go">Go</option>
-                    <option value="rust">Rust</option>
-                    <option value="sql">SQL</option>
-                    <option value="json">JSON</option>
-                    <option value="typescript">TypeScript</option>
-                    <option value="markdown">Markdown</option>
-                    <option value="xml">XML</option>
-                </select>
+        <!-- Left: Brand & Mobile Menu Toggle -->
+        <div class="flex items-center gap-2 shrink-0">
+            <button id="mobile-menu-btn"
+                    class="sm:hidden p-2 -ml-1 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 rounded-lg transition-colors"
+                    title="Menu">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
 
-                <select id="theme-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-40 shrink-0" title="Theme Code" data-i18n-title="theme_select_title">
-                    <option value="atom-one-dark">Atom One Dark</option>
-                    <option value="monokai">Monokai</option>
-                    <option value="base16/dracula">Dracula</option>
-                    <option value="github-dark">GitHub Dark</option>
-                    <option value="nord">Nord</option>
-                    <option value="vs2015">VS 2015</option>
-                </select>
-
-                <select id="bg-select" class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-44 shrink-0" title="Màu nền" data-i18n-title="bg_select_title">
-                    <option value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)" data-i18n="bg_purple">Tím Hoàng Hôn</option>
-                    <option value="linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)" data-i18n="bg_blue">Đại Dương Xanh</option>
-                    <option value="linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)" data-i18n="bg_candy">Kẹo Ngọt</option>
-                    <option value="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)" data-i18n="bg_green" selected>Xanh Lá Tươi</option>
-                    <option value="#282c34" data-i18n="bg_solid">Xám Đậm (Solid)</option>
-                    <option value="transparent" data-i18n="bg_transparent">Trong suốt</option>
-                </select>
-
-                <div class="flex items-center justify-between sm:justify-start gap-2 bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 shrink-0">
-                    <span class="text-xs text-gray-500 dark:text-gray-400" data-i18n="padding_label">Padding</span>
-                    <input type="range" id="padding-slider" min="16" max="128" value="64" class="w-full sm:w-24 h-1 bg-gray-300 dark:bg-neutral-600 rounded-lg appearance-none cursor-pointer">
-                </div>
-            </div>
-
-            <!-- Right: Actions -->
-            <div class="flex items-center gap-1 sm:gap-2 shrink-0 ml-auto sm:ml-4">
-                <!-- UI Language Toggle -->
-                <select id="ui-lang-select" class="bg-transparent text-gray-900 dark:text-gray-100 text-sm font-semibold outline-none cursor-pointer hover:text-gray-600 dark:hover:text-gray-300 transition-colors mr-1" title="Ngôn ngữ giao diện" data-i18n-title="ui_lang_title">
-                    <option value="vi">VI</option>
-                    <option value="en">EN</option>
-                </select>
-
-                <button id="theme-toggle" class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition-colors" title="Bật/Tắt Chế Độ Tối" data-i18n-title="theme_toggle_title">
-                    <!-- Sun Icon (Light Mode) -->
-                    <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    <!-- Moon Icon (Dark Mode) -->
-                    <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                </button>
-
-                <button id="format-btn" class="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path></svg>
-                    <span data-i18n="btn_format">Format</span>
-                </button>
-
-                <button id="export-btn" class="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm transition-all">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    <span data-i18n="btn_export" class="hidden sm:inline whitespace-nowrap">Lưu ảnh</span>
-                </button>
+            <!-- SEO Tối ưu: Dùng thẻ <h1> thay vì <div> cho tiêu đề trang -->
+            <div class="flex flex-col">
+                <h1 class="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-500 select-none leading-tight"
+                    data-i18n="app_title">
+                    CodePic
+                </h1>
+                <!-- Thẻ <h2> mô tả chức năng được ẩn đi nhưng bot Google vẫn đọc được -->
+                <h2 class="sr-only">Trình Tạo Ảnh Code Snippet</h2>
             </div>
         </div>
-    </header>
 
-    <!-- MAIN WORKSPACE -->
-    <main class="animated-dots flex-1 relative overflow-auto bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNlN2U1ZTQiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiM0MDRhNTIiIGZpbGwtb3BhY2l0eT0iMC4yIi8+PC9zdmc+')] pb-32">
-        
-        <!-- Canvas wrapper -->
-        <div class="min-h-full flex items-center justify-center p-4 sm:p-8">
-            <div id="export-container" class="relative rounded-lg shadow-2xl flex items-center justify-center shrink-0">
-                
-                <!-- Mac Window UI -->
-                <div id="mac-window" class="rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] w-[800px] min-w-[320px] max-w-full border border-white/10 flex flex-col relative group" style="background-color: #282c34;">
-                    
-                    <!-- SVG Draw Layer -->
-                    <svg id="draw-layer" xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 w-full h-full z-20 pointer-events-none rounded-xl" style="overflow: visible;"></svg>
+        <div class="h-6 w-px bg-gray-200 dark:bg-neutral-700 hidden sm:block mx-4"></div>
 
-                    <!-- Resize Handles -->
-                    <div class="resize-handle left absolute left-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-l-xl z-30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <div class="resize-handle right absolute right-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-r-xl z-30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <!-- Settings Group (Collapsible on Mobile) -->
+        <div id="settings-group"
+             class="hidden sm:flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-2 absolute sm:relative top-full left-0 w-full sm:w-auto bg-white dark:bg-neutral-900 sm:bg-transparent p-4 sm:p-0 border-b border-gray-200 dark:border-neutral-800 sm:border-0 shadow-xl sm:shadow-none z-50 overflow-x-auto no-scrollbar">
+            <select id="lang-select"
+                    class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-36 shrink-0"
+                    title="Ngôn ngữ Lập trình" data-i18n-title="lang_select_title">
+                <option value="javascript">JavaScript</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="python">Python</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="csharp">C#</option>
+                <option value="php">PHP</option>
+                <option value="ruby">Ruby</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+                <option value="sql">SQL</option>
+                <option value="json">JSON</option>
+                <option value="typescript">TypeScript</option>
+                <option value="markdown">Markdown</option>
+                <option value="xml">XML</option>
+            </select>
 
-                    <!-- Window Header -->
-                    <div class="h-12 flex items-center px-4 relative shrink-0 z-10 border-b border-white/5">
-                        <div class="flex gap-2 absolute left-4">
-                            <div class="w-3 h-3 rounded-full bg-[#ff5f56] shadow-sm"></div>
-                            <div class="w-3 h-3 rounded-full bg-[#ffbd2e] shadow-sm"></div>
-                            <div class="w-3 h-3 rounded-full bg-[#27c93f] shadow-sm"></div>
-                        </div>
-                        <div class="flex-1 flex justify-center px-20">
-                            <span id="file-title" contenteditable="true" spellcheck="false" class="text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition hover:bg-white/5 rounded px-3 pt-1 pb-1.5 min-w-[50px] max-w-[250px] whitespace-nowrap overflow-hidden text-ellipsis relative block cursor-text leading-normal">untitled.js</span>
-                        </div>
+            <select id="theme-select"
+                    class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-40 shrink-0"
+                    title="Theme Code" data-i18n-title="theme_select_title">
+                <option value="atom-one-dark">Atom One Dark</option>
+                <option value="monokai">Monokai</option>
+                <option value="base16/dracula">Dracula</option>
+                <option value="github-dark">GitHub Dark</option>
+                <option value="nord">Nord</option>
+                <option value="vs2015">VS 2015</option>
+            </select>
+
+            <select id="bg-select"
+                    class="bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 text-sm focus:ring-2 focus:ring-emerald-500 outline-none cursor-pointer w-full sm:w-44 shrink-0"
+                    title="Màu nền" data-i18n-title="bg_select_title">
+                <option value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)" data-i18n="bg_purple">Tím Hoàng Hôn
+                </option>
+                <option value="linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)" data-i18n="bg_blue">Đại Dương Xanh
+                </option>
+                <option value="linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)" data-i18n="bg_candy">Kẹo
+                    Ngọt
+                </option>
+                <option value="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)" data-i18n="bg_green" selected>Xanh Lá
+                    Tươi
+                </option>
+                <option value="#282c34" data-i18n="bg_solid">Xám Đậm (Solid)</option>
+                <option value="transparent" data-i18n="bg_transparent">Trong suốt</option>
+            </select>
+
+            <div class="flex items-center justify-between sm:justify-start gap-2 bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-lg px-3 py-2 sm:py-1.5 shrink-0">
+                <span class="text-xs text-gray-500 dark:text-gray-400" data-i18n="padding_label">Padding</span>
+                <input type="range" id="padding-slider" min="16" max="128" value="64"
+                       class="w-full sm:w-24 h-1 bg-gray-300 dark:bg-neutral-600 rounded-lg appearance-none cursor-pointer">
+            </div>
+        </div>
+
+        <!-- Right: Actions -->
+        <div class="flex items-center gap-1 sm:gap-2 shrink-0 ml-auto sm:ml-4">
+            <!-- UI Language Toggle -->
+            <select id="ui-lang-select"
+                    class="bg-transparent text-gray-900 dark:text-gray-100 text-sm font-semibold outline-none cursor-pointer hover:text-gray-600 dark:hover:text-gray-300 transition-colors mr-1"
+                    title="Ngôn ngữ giao diện" data-i18n-title="ui_lang_title">
+                <option value="vi">VI</option>
+                <option value="en">EN</option>
+            </select>
+
+            <button id="theme-toggle"
+                    class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition-colors"
+                    title="Bật/Tắt Chế Độ Tối" data-i18n-title="theme_toggle_title">
+                <!-- Sun Icon (Light Mode) -->
+                <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <!-- Moon Icon (Dark Mode) -->
+                <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor"
+                     viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            </button>
+
+            <button id="format-btn"
+                    class="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 hover:bg-gray-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 6h16M4 12h16M4 18h7"></path>
+                </svg>
+                <span data-i18n="btn_format">Format</span>
+            </button>
+
+            <button id="export-btn"
+                    class="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm transition-all">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                <span data-i18n="btn_export" class="hidden sm:inline whitespace-nowrap">Lưu ảnh</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN WORKSPACE -->
+<main class="animated-dots flex-1 relative overflow-auto bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNlN2U1ZTQiIGZpbGwtb3BhY2l0eT0iMC40Ii8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiM0MDRhNTIiIGZpbGwtb3BhY2l0eT0iMC4yIi8+PC9zdmc+')] pb-32">
+
+    <!-- Canvas wrapper -->
+    <div class="min-h-full flex items-center justify-center p-4 sm:p-8">
+        <div id="export-container" class="relative rounded-lg shadow-2xl flex items-center justify-center shrink-0">
+
+            <!-- Mac Window UI -->
+            <div id="mac-window"
+                 class="rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] w-[800px] min-w-[320px] max-w-full border border-white/10 flex flex-col relative group"
+                 style="background-color: #282c34;">
+
+                <!-- SVG Draw Layer -->
+                <svg id="draw-layer" xmlns="http://www.w3.org/2000/svg"
+                     class="absolute inset-0 w-full h-full z-20 pointer-events-none rounded-xl"
+                     style="overflow: visible;"></svg>
+
+                <!-- Resize Handles -->
+                <div class="resize-handle left absolute left-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-l-xl z-30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="resize-handle right absolute right-0 top-0 bottom-0 w-3 cursor-ew-resize hover:bg-white/10 rounded-r-xl z-30 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                <!-- Window Header -->
+                <div class="h-12 flex items-center px-4 relative shrink-0 z-10 border-b border-white/5">
+                    <div class="flex gap-2 absolute left-4">
+                        <div class="w-3 h-3 rounded-full bg-[#ff5f56] shadow-sm"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#ffbd2e] shadow-sm"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#27c93f] shadow-sm"></div>
                     </div>
+                    <div class="flex-1 flex justify-center px-20">
+                        <span id="file-title" contenteditable="true" spellcheck="false"
+                              class="text-gray-400 text-sm font-mono text-center outline-none focus:text-white transition hover:bg-white/5 rounded px-3 pt-1 pb-1.5 min-w-[50px] max-w-[250px] whitespace-nowrap overflow-hidden text-ellipsis relative block cursor-text leading-normal">untitled.js</span>
+                    </div>
+                </div>
 
-                    <!-- Code Area -->
-                    <div class="relative w-full text-left code-grid-wrapper z-0">
+                <!-- Code Area -->
+                <div class="relative w-full text-left code-grid-wrapper z-0">
                         <pre class="m-0"><code id="highlight-display" class="language-javascript block">const greeting = "Xin chào các nhà phát triển!";
 
 function createBeautifulCode() {
@@ -218,7 +307,7 @@ function createBeautifulCode() {
         message: greeting
     };
 }</code></pre>
-                        <textarea id="code-editor" spellcheck="false">const greeting = "Xin chào các nhà phát triển!";
+                    <textarea id="code-editor" spellcheck="false">const greeting = "Xin chào các nhà phát triển!";
 
 function createBeautifulCode() {
     // 1. Gõ code của bạn vào đây
@@ -229,60 +318,93 @@ function createBeautifulCode() {
         message: greeting
     };
 }</textarea>
-                    </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <!-- FLOATING TOOLBAR -->
-    <div class="fixed bottom-4 sm:bottom-6 left-2 right-2 sm:left-1/2 sm:-translate-x-1/2 sm:w-max z-40 pb-[env(safe-area-inset-bottom)] pointer-events-none flex justify-center">
-        <div class="flex items-center gap-1.5 p-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-200 dark:border-neutral-700 pointer-events-auto overflow-x-auto no-scrollbar w-full sm:w-auto">
-            
-            <!-- Drawing Tools -->
-            <div class="flex items-center gap-1 shrink-0">
-                <button class="tool-btn active flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition" data-tool="edit" title="Chỉnh sửa Code" data-i18n-title="tool_edit_title">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                </button>
-                <div class="w-px h-6 bg-gray-200 dark:bg-neutral-700 mx-1 shrink-0"></div>
-                <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition" data-tool="text" title="Chữ" data-i18n-title="tool_text_title">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7V4h16v3M12 4v16m-4 0h8"></path></svg>
-                </button>
-                <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition" data-tool="rect" title="Hình vuông" data-i18n-title="tool_rect_title">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect></svg>
-                </button>
-                <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition" data-tool="circle" title="Hình tròn" data-i18n-title="tool_circle_title">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"></circle></svg>
-                </button>
-                <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition" data-tool="arrow" title="Mũi tên" data-i18n-title="tool_arrow_title">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                </button>
-            </div>
+<!-- FLOATING TOOLBAR -->
+<div class="fixed bottom-4 sm:bottom-6 left-2 right-2 sm:left-1/2 sm:-translate-x-1/2 sm:w-max z-40 pb-[env(safe-area-inset-bottom)] pointer-events-none flex justify-center">
+    <div class="flex items-center gap-1.5 p-2 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-gray-200 dark:border-neutral-700 pointer-events-auto overflow-x-auto no-scrollbar w-full sm:w-auto">
 
+        <!-- Drawing Tools -->
+        <div class="flex items-center gap-1 shrink-0">
+            <button class="tool-btn active flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition"
+                    data-tool="edit" title="Chỉnh sửa Code" data-i18n-title="tool_edit_title">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+            </button>
             <div class="w-px h-6 bg-gray-200 dark:bg-neutral-700 mx-1 shrink-0"></div>
+            <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition"
+                    data-tool="text" title="Chữ" data-i18n-title="tool_text_title">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 7V4h16v3M12 4v16m-4 0h8"></path>
+                </svg>
+            </button>
+            <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition"
+                    data-tool="rect" title="Hình vuông" data-i18n-title="tool_rect_title">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect>
+                </svg>
+            </button>
+            <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition"
+                    data-tool="circle" title="Hình tròn" data-i18n-title="tool_circle_title">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+                </svg>
+            </button>
+            <button class="tool-btn flex p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition"
+                    data-tool="arrow" title="Mũi tên" data-i18n-title="tool_arrow_title">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+            </button>
+        </div>
 
-            <!-- Color Picker -->
-            <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-200 dark:border-neutral-700 shrink-0 relative cursor-pointer" title="Chọn màu vẽ" data-i18n-title="tool_color_title">
-                <input type="color" id="draw-color" value="#10b981" class="absolute -inset-2 w-[200%] h-[200%] cursor-pointer">
-            </div>
+        <div class="w-px h-6 bg-gray-200 dark:bg-neutral-700 mx-1 shrink-0"></div>
 
-            <div class="w-px h-6 bg-gray-200 dark:bg-neutral-700 mx-1 shrink-0"></div>
+        <!-- Color Picker -->
+        <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-gray-200 dark:border-neutral-700 shrink-0 relative cursor-pointer"
+             title="Chọn màu vẽ" data-i18n-title="tool_color_title">
+            <input type="color" id="draw-color" value="#10b981"
+                   class="absolute -inset-2 w-[200%] h-[200%] cursor-pointer">
+        </div>
 
-            <!-- History Controls -->
-            <div class="flex items-center gap-1 shrink-0">
-                <button id="undo-btn" class="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition opacity-50 cursor-not-allowed" title="Hoàn tác (Undo)" data-i18n-title="undo_title">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
-                </button>
-                <button id="redo-btn" class="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition opacity-50 cursor-not-allowed" title="Làm lại (Redo)" data-i18n-title="redo_title">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path></svg>
-                </button>
-                <button id="clear-draw-btn" class="p-2.5 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition" title="Xóa tất cả hình vẽ" data-i18n-title="clear_draw_title">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                </button>
-            </div>
+        <div class="w-px h-6 bg-gray-200 dark:bg-neutral-700 mx-1 shrink-0"></div>
+
+        <!-- History Controls -->
+        <div class="flex items-center gap-1 shrink-0">
+            <button id="undo-btn"
+                    class="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition opacity-50 cursor-not-allowed"
+                    title="Hoàn tác (Undo)" data-i18n-title="undo_title">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                </svg>
+            </button>
+            <button id="redo-btn"
+                    class="p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-neutral-800 transition opacity-50 cursor-not-allowed"
+                    title="Làm lại (Redo)" data-i18n-title="redo_title">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path>
+                </svg>
+            </button>
+            <button id="clear-draw-btn"
+                    class="p-2.5 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition"
+                    title="Xóa tất cả hình vẽ" data-i18n-title="clear_draw_title">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+            </button>
         </div>
     </div>
-
-    <script src="app.js"></script>
+</div>
 </body>
 </html>
